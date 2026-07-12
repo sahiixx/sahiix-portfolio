@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#070709" />
+    <title>SAHIIX — AI-native operating systems & real-time voice agents</title>
+    <meta
+      name="description"
+      content="Independent engineer building AI-native operating systems and real-time voice agents — from the OS layer to the checkout button."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- scroll progress -->
+    <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+    <!-- nav -->
+    <header class="nav" id="nav">
+      <a class="nav-brand" href="#top">
+        <span class="nav-mark">◆</span><span>SAHIIX</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#work">Work</a>
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="nav-cta" href="#contact">Let's talk</a>
+    </header>
+
+    <main id="top">
+      <!-- hero -->
+      <section class="hero">
+        <div class="orb orb-a" aria-hidden="true"></div>
+        <div class="orb orb-b" aria-hidden="true"></div>
+        <div class="hero-inner">
+          <p class="eyebrow reveal"><span class="dot"></span> <span id="availability">Available for select work</span> · <span id="location">Dubai, UAE</span></p>
+          <h1 class="hero-title reveal">
+            <span class="hero-name" id="heroName">SAHIIX</span>
+          </h1>
+          <p class="hero-rotator reveal">
+            <span class="rotator-prefix">I build </span><span class="rotator-word" id="rotatorWord">AI-native operating systems.</span>
+          </p>
+          <p class="hero-tagline reveal" id="heroTagline"></p>
+          <div class="hero-actions reveal">
+            <a class="btn btn-primary" href="#work">View work</a>
+            <a class="btn btn-ghost" href="#contact">Get in touch</a>
+          </div>
+          <div class="hero-stats reveal" id="heroStats"></div>
+        </div>
+        <a class="scroll-cue" href="#work" aria-label="Scroll to work">
+          <span>Scroll</span>
+          <span class="scroll-cue-line"></span>
+        </a>
+      </section>
+
+      <!-- work -->
+      <section class="section" id="work">
+        <div class="section-head">
+          <p class="section-kicker">Selected work</p>
+          <h2 class="section-title">Things I've built.</h2>
+          <p class="section-sub">Operating systems, voice agents, and tools — shipped and running.</p>
+        </div>
+        <div class="project-grid" id="projectGrid"></div>
+      </section>
+
+      <!-- about -->
+      <section class="section" id="about">
+        <div class="about-grid">
+          <div class="about-portrait reveal">
+            <div class="portrait">
+              <span class="portrait-mark">SAHIIX</span>
+            </div>
+          </div>
+          <div class="about-copy">
+            <p class="section-kicker">About</p>
+            <h2 class="section-title">Operating where the LLM meets the machine.</h2>
+            <div class="bio" id="bio"></div>
+            <div class="about-meta">
+              <div><span>Based in</span><strong id="aboutLocation"></strong></div>
+              <div><span>Status</span><strong id="aboutStatus"></strong></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- skills -->
+      <section class="section" id="skills">
+        <div class="section-head">
+          <p class="section-kicker">Toolkit</p>
+          <h2 class="section-title">What I work with.</h2>
+        </div>
+        <div class="skill-grid" id="skillGrid"></div>
+      </section>
+
+      <!-- contact -->
+      <section class="section" id="contact">
+        <div class="contact-card reveal">
+          <p class="section-kicker">Contact</p>
+          <h2 class="section-title contact-title">Let's build something that ships.</h2>
+          <p class="contact-sub">Have a system in mind, or want to talk voice agents, OS control, or AI infrastructure? Send a note.</p>
+
+          <form class="contact-form" id="contactForm" novalidate>
+            <div class="field-row">
+              <label class="field">
+                <span>Name</span>
+                <input type="text" name="name" autocomplete="name" required />
+              </label>
+              <label class="field">
+                <span>Email</span>
+                <input type="email" name="email" autocomplete="email" required />
+              </label>
+            </div>
+            <label class="field">
+              <span>Message</span>
+              <textarea name="message" rows="4" required></textarea>
+            </label>
+            <button type="submit" class="btn btn-primary btn-block">Send message</button>
+            <p class="form-note" id="formNote" role="status"></p>
+          </form>
+
+          <div class="socials" id="socials"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span class="nav-brand"><span class="nav-mark">◆</span> SAHIIX</span>
+        <p>© <span id="year"></span> SAHIIX. Designed & built from scratch.</p>
+        <a href="#top" class="footer-top">Back to top ↑</a>
+      </div>
+    </footer>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -192,9 +192,13 @@ const io = new IntersectionObserver(
   },
   { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
 );
-document.querySelectorAll(".reveal").forEach((el, i) => {
-  // stagger within a group
-  (el as HTMLElement).style.transitionDelay = `${Math.min((i % 6) * 60, 360)}ms`;
+// stagger within each group — siblings share one delay sequence
+const groupIndex = new Map<ParentNode, number>();
+document.querySelectorAll(".reveal").forEach((el) => {
+  const parent = el.parentElement!;
+  const n = groupIndex.get(parent) ?? 0;
+  groupIndex.set(parent, n + 1);
+  (el as HTMLElement).style.transitionDelay = `${Math.min(n * 80, 480)}ms`;
   io.observe(el);
 });
 

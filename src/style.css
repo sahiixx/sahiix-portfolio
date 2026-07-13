@@ -384,7 +384,7 @@ a { color: inherit; text-decoration: none; }
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(420px 200px at 100% 0%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%);
+  background: radial-gradient(420px 200px at var(--mx, 100%) var(--my, 0%), color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%);
   opacity: 0;
   transition: opacity 0.35s;
   pointer-events: none;
@@ -403,6 +403,8 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
 }
 .project:hover::after { transform: scaleX(1); }
+/* tilt responsiveness: shorter transform transition than the reveal entrance */
+.project.reveal { transition: transform 0.18s var(--ease-out), border-color 0.3s, box-shadow 0.3s, opacity 0.7s var(--ease-soft); }
 .project { cursor: pointer; }
 .project:focus-visible { outline: 2px solid color-mix(in srgb, var(--accent) 70%, #fff); outline-offset: 2px; }
 .project-featured { grid-column: span 1; }
@@ -709,10 +711,39 @@ button:focus-visible,
   border-radius: 6px;
 }
 
-/* ── print ──────────────────────────────────────────────────────────────────── */
+/* ── real-time interactions ──────────────────────────────────────────────────── */
+/* lift content above the ambient cursor glow */
+main, .footer { position: relative; z-index: 1; }
+
+.cursor-glow {
+  position: fixed;
+  top: 0; left: 0;
+  width: 480px; height: 480px;
+  margin: -240px 0 0 -240px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(139, 92, 255, 0.16), rgba(34, 211, 238, 0.06) 42%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.magnetic { transition: transform 0.15s var(--ease-out); }
+
+/* View Transitions: cross-fade + subtle drift between home and case studies */
+@keyframes vt-out { to { opacity: 0; transform: translateY(-10px) scale(0.985); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(10px) scale(1.015); } to { opacity: 1; transform: none; } }
+::view-transition-old(root) { animation: vt-out 0.28s var(--ease-out) both; }
+::view-transition-new(root) { animation: vt-in 0.34s var(--ease-out) both; }
+/* when VT is supported, the detail entrance is handled by the transition — avoid double-animating */
+.vt .detail:not([hidden]) .detail-inner { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+}
+
 @media print {
   body { background: #fff; color: #000; }
-  .nav, .scroll-progress, .scroll-cue, .orb, .skip-link, .hero-stats, .footer-top { display: none !important; }
+  .nav, .scroll-progress, .scroll-cue, .orb, .skip-link, .hero-stats, .footer-top, .cursor-glow { display: none !important; }
   .hero { min-height: auto; padding: 0 0 24px; }
   .section { padding: 18px 0; max-width: 100%; }
   .project, .skill-group, .contact-card { border: 1px solid #ccc; box-shadow: none; break-inside: avoid; background: #fff; }

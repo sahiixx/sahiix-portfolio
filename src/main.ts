@@ -5,6 +5,12 @@ import { identity, projects, skillGroups, stats, type Project } from "./data";
 const $ = <T extends HTMLElement = HTMLElement>(sel: string): T =>
   document.querySelector<T>(sel)!;
 
+// ── Capabilities (gate every real-time interaction) ───────────────────────────
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const finePointer = matchMedia("(pointer: fine)").matches;
+const supportsVT = "startViewTransition" in document;
+if (supportsVT) document.documentElement.classList.add("vt");
+
 // ── Render: identity ─────────────────────────────────────────────────────────
 $("#heroName").textContent = identity.name;
 $("#availability").textContent = identity.availability;
@@ -132,23 +138,40 @@ function renderDetail(p: Project) {
   window.scrollTo({ top: 0, behavior: "auto" });
 }
 
-function route() {
+let routeMode: "home" | "detail" = "home";
+let booted = false;
+
+function applyRoute() {
   const h = location.hash;
   if (h.startsWith("#/")) {
     const id = h.slice(2);
     const p = projects.find((x) => x.id === id);
-    if (p) { renderDetail(p); return; }
+    if (p) { renderDetail(p); routeMode = "detail"; return; }
     // unknown id → fall home
     location.hash = "";
     return;
   }
   showHome();
+  routeMode = "home";
   // for in-page anchors, smooth-scroll to the target after layout
   const id = h.slice(1);
   if (id) {
     const target = document.getElementById(id);
     if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+}
+
+function route() {
+  const h = location.hash;
+  const next: "home" | "detail" =
+    h.startsWith("#/") && projects.find((x) => x.id === h.slice(2)) ? "detail" : "home";
+  // cross-fade only on a real home↔detail switch (not in-page anchors, not first paint)
+  if (booted && next !== routeMode && supportsVT && !reduceMotion) {
+    document.startViewTransition(() => applyRoute());
+  } else {
+    applyRoute();
+  }
+  booted = true;
 }
 window.addEventListener("hashchange", route);
 
@@ -164,21 +187,40 @@ $("#skillGrid").append(
   }),
 );
 
-// ── Hero rotator ──────────────────────────────────────────────────────────────
+// ── Hero rotator (typewriter) ─────────────────────────────────────────────────
 const rotatorEl = $("#rotatorWord");
 let ri = 0;
-function rotate() {
-  const next = identity.rotator[(ri + 1) % identity.rotator.length];
-  rotatorEl.classList.add("rotator-out");
-  setTimeout(() => {
-    rotatorEl.textContent = next;
-    rotatorEl.classList.remove("rotator-out");
-    rotatorEl.classList.add("rotator-in");
-    setTimeout(() => rotatorEl.classList.remove("rotator-in"), 450);
-    ri++;
-  }, 280);
+let rotTimer: ReturnType<typeof setTimeout>;
+function typeWord(word: string, done: () => void) {
+  let i = 0;
+  const step = () => {
+    rotatorEl.textContent = word.slice(0, i);
+    i++;
+    rotTimer = setTimeout(step, 55 + Math.random() * 45);
+    if (i > word.length) { clearTimeout(rotTimer); done(); }
+  };
+  step();
 }
-setInterval(rotate, 2600);
+function eraseWord(done: () => void) {
+  const step = () => {
+    rotatorEl.textContent = rotatorEl.textContent.slice(0, -1);
+    if (rotatorEl.textContent.length > 0) rotTimer = setTimeout(step, 28);
+    else done();
+  };
+  step();
+}
+function rotCycle() {
+  const word = identity.rotator[ri % identity.rotator.length];
+  typeWord(word, () => {
+    rotTimer = setTimeout(() => eraseWord(() => { ri++; rotCycle(); }), 1700);
+  });
+}
+if (reduceMotion) {
+  // instant swap, no typing animation
+  setInterval(() => { rotatorEl.textContent = identity.rotator[(++ri) % identity.rotator.length]; }, 2600);
+} else {
+  rotCycle();
+}
 
 // ── Scroll reveal ────────────────────────────────────────────────────────────
 const io = new IntersectionObserver(
@@ -243,6 +285,52 @@ document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((a) => {
 
 // initial route (supports deep-linking straight to a case study)
 route();
+
+// ── Real-time interactions (pointer-class + motion-gated) ─────────────────────
+if (finePointer && !reduceMotion) {
+  // 1) cursor-follow ambient glow (lerped for a soft trailing light)
+  const glow = document.createElement("div");
+  glow.className = "cursor-glow";
+  glow.setAttribute("aria-hidden", "true");
+  document.body.appendChild(glow);
+  let gx = innerWidth / 2, gy = innerHeight / 2, tx = gx, ty = gy;
+  addEventListener("pointermove", (e) => { tx = e.clientX; ty = e.clientY; }, { passive: true });
+  const rafGlow = () => {
+    gx += (tx - gx) * 0.12;
+    gy += (ty - gy) * 0.12;
+    glow.style.transform = `translate(${gx}px, ${gy}px)`;
+    requestAnimationFrame(rafGlow);
+  };
+  rafGlow();
+
+  // 2) magnetic buttons — drift toward the cursor while hovered
+  const magnetic = (el: HTMLElement, strength = 0.3) => {
+    el.classList.add("magnetic");
+    el.addEventListener("pointermove", (e) => {
+      const r = el.getBoundingClientRect();
+      const dx = e.clientX - (r.left + r.width / 2);
+      const dy = e.clientY - (r.top + r.height / 2);
+      el.style.transform = `translate(${dx * strength}px, ${dy * strength}px)`;
+    });
+    el.addEventListener("pointerleave", () => { el.style.transform = ""; });
+  };
+  document.querySelectorAll<HTMLElement>(".btn, .nav-cta").forEach((b) => magnetic(b));
+
+  // 3) 3D tilt + pointer-tracking glow on project cards
+  const tilt = (el: HTMLElement, max = 7) => {
+    el.addEventListener("pointermove", (e) => {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width;   // 0..1
+      const py = (e.clientY - r.top) / r.height;
+      el.style.setProperty("--mx", px * 100 + "%");
+      el.style.setProperty("--my", py * 100 + "%");
+      el.style.transform =
+        `perspective(800px) rotateX(${-(py - 0.5) * 2 * max}deg) rotateY(${(px - 0.5) * 2 * max}deg) translateY(-4px)`;
+    });
+    el.addEventListener("pointerleave", () => { el.style.transform = ""; });
+  };
+  document.querySelectorAll<HTMLElement>(".project").forEach((c) => tilt(c));
+}
 
 // ── Contact form (POSTs to /api/contact, falls back to mailto) ──────────────────
 const form = $("#contactForm") as HTMLFormElement;

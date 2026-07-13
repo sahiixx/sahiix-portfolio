@@ -67,8 +67,46 @@ static build *and* the `functions/` directory together). Plain `vite preview`
 serves the static build only — `/api/contact` 404s there, and the form
 correctly falls back to `mailto:`.
 
+## Deploy (Cloudflare Pages)
+
+Static site + one Pages Function (`functions/api/contact.ts`). Two ways:
+
+**Git-connected (recommended):** connect the repo in the Cloudflare dashboard,
+build command `npm run build`, output `dist`. Set the secrets below in
+Settings → Environment variables. Push to main deploys.
+
+**CLI:** `npm run deploy` (builds, then `wrangler pages deploy dist`).
+
+Secrets (`wrangler pages secret put …` or the dashboard):
+
+| Var | Required | Purpose |
+|---|---|---|
+| `RESEND_API_KEY` | no | Resend key; enables email delivery from `/api/contact` |
+| `CONTACT_FROM` | if Resend | sender on a Resend-verified domain |
+| `CONTACT_TO` | no | destination (defaults to `CONTACT_FROM`) |
+
+With no `RESEND_API_KEY`, `/api/contact` returns `503` and the form falls
+back to `mailto:` — it always works.
+
+### After you confirm the deployed domain
+
+Update three placeholders in `index.html` (`canonical`, `og:url`, JSON-LD
+`url`) and the `https://sahiix.os/` URLs in `public/robots.txt` and
+`public/sitemap.xml`. Then set an `og:image` (see gap note below).
+
+### Known gap: social preview image
+
+There is no raster `og:image` yet — generating one needs a headless browser
+or a screenshot tool, which this no-deps stack deliberately avoids. Options
+later: a hand-authored `og.png` in `public/`, or a one-off Puppeteer/Playwright
+script run locally. The card tags (`og:title`, `og:description`, `twitter:card`)
+are wired; only the image is missing.
+
 ## Notes
 
 - Project `url: ""` renders a disabled link and the card still opens its
   case study — drop in a live/repo URL to enable the external "View" link.
 - `prefers-reduced-motion` disables animations.
+- Hash-routed case studies (`#/<id>`) are URL fragments, not separate pages —
+  they don't need sitemap entries, and `document.title` updates per route for
+  shareability.

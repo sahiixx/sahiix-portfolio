@@ -84,10 +84,13 @@ $("#projectGrid").append(...projects.map(projectCard));
 const homeRoot = $("#home");
 const detailRoot = $("#detail");
 
+const defaultTitle = document.title;
+
 function showHome() {
   detailRoot.hidden = true;
   homeRoot.hidden = false;
   document.body.classList.remove("detail-active");
+  document.title = defaultTitle;
 }
 
 function renderDetail(p: Project) {
@@ -95,6 +98,7 @@ function renderDetail(p: Project) {
   detailRoot.hidden = false;
   document.body.classList.add("detail-active");
   detailRoot.style.setProperty("--accent", p.accent);
+  document.title = `${p.name} — SAHIIX`;
   const paragraphs = p.longDescription.map((t) => `<p class="detail-p">${t}</p>`).join("");
   const highlights = p.highlights.map((h) => `<li class="detail-highlight">${h}</li>`).join("");
   const linkBlock = p.url

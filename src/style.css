@@ -600,3 +600,43 @@ a { color: inherit; text-decoration: none; }
   .orb, .dot, .scroll-cue-line { animation: none; }
   html { scroll-behavior: auto; }
 }
+
+/* ── accessibility: skip link + focus ──────────────────────────────────────── */
+.skip-link {
+  position: fixed;
+  top: -48px;
+  left: 10px;
+  z-index: 200;
+  background: var(--text);
+  color: var(--bg);
+  padding: 9px 15px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  transition: top 0.18s ease;
+}
+.skip-link:focus { top: 10px; outline: 2px solid var(--accent); outline-offset: 2px; }
+
+a:focus-visible,
+button:focus-visible,
+[role="link"]:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* ── print ──────────────────────────────────────────────────────────────────── */
+@media print {
+  body { background: #fff; color: #000; }
+  .nav, .scroll-progress, .scroll-cue, .orb, .skip-link, .hero-stats, .footer-top { display: none !important; }
+  .hero { min-height: auto; padding: 0 0 24px; }
+  .section { padding: 18px 0; max-width: 100%; }
+  .project, .skill-group, .contact-card { border: 1px solid #ccc; box-shadow: none; break-inside: avoid; background: #fff; }
+  a { color: #000; text-decoration: underline; }
+  a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 10px; color: #555; }
+  .hero-name, .stat-value, .detail-name {
+    color: #000 !important;
+    -webkit-text-fill-color: #000 !important;
+    background: none !important;
+  }
+}

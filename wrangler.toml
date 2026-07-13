@@ -1,0 +1,14 @@
+# Cloudflare Pages config for the SAHIIX portfolio.
+# `functions/` is auto-detected as the Pages Functions directory.
+# Deploy: `npm run deploy` (runs build, then `wrangler pages deploy dist`).
+name = "sahiix-portfolio"
+compatibility_date = "2026-07-13"
+pages_build_output_dir = "dist"
+
+# Secrets are NOT set here — put them in the Pages dashboard
+# (Settings → Environment variables) or via `wrangler pages secret put`:
+#   RESEND_API_KEY   — Resend API key (enables email delivery from /api/contact)
+#   CONTACT_FROM     — verified sender address (e.g. hello@yourdomain.com)
+#   CONTACT_TO       — destination address (defaults to CONTACT_FROM)
+# When RESEND_API_KEY is unset, /api/contact returns 503 and the client
+# falls back to a mailto: link, so the form always works.

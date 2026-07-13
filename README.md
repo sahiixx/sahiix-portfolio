@@ -31,18 +31,44 @@ Edit there; the UI renders from it. Add a project by appending to the array.
 ## Structure
 
 ```
-index.html          semantic sections (hero / work / about / skills / contact)
-src/main.ts         render data + interactions (rotator, reveal, scroll, form)
-src/data.ts         ← edit content here
-src/style.css       bespoke dark theme, gradients, scroll-reveal, responsive
-vite.config.ts      base "./" so the build also opens as a static file
+index.html              semantic sections (hero / work / about / skills / contact) + #detail mount
+src/main.ts             render data + interactions (router, rotator, reveal, scroll, form)
+src/data.ts             ← edit content here
+src/style.css           bespoke dark theme, gradients, scroll-reveal, responsive
+functions/api/contact.ts  Cloudflare Pages Function — POST /api/contact (Resend-backed)
+vite.config.ts          base "./" so the build also opens as a static file
 ```
+
+## Case-study pages
+
+Each project card links to a full case-study view via a hash route —
+`#/sahiix-os`, `#/jarvis`, … The router (`src/main.ts`, `route()` / `renderDetail`)
+swaps `#home` for `#detail` and renders the project's `longDescription`,
+`highlights`, role/status/year, and stack. Browser back / the "All work" link
+returns home. Deep-linking to `#/<id>` works on a cold load. The content for
+every case study lives in `src/data.ts` (the `longDescription` and `highlights`
+arrays on each project).
+
+## Contact form
+
+The form POSTs JSON to `/api/contact` (see `functions/api/contact.ts`, a
+Cloudflare Pages Function). The flow is honest about delivery:
+
+- **Resend configured** (`RESEND_API_KEY` env set in the Pages dashboard) →
+  the message is forwarded to Resend and delivered to `CONTACT_TO`
+  (defaults to `CONTACT_FROM`). Set `CONTACT_FROM` to a sender on a
+  Resend-verified domain.
+- **No key configured** → the function returns `503`, and the client falls
+  back to opening the visitor's mail client (`mailto:`). So the form always
+  works, even before you wire up delivery.
+
+To run the function locally, use `npx wrangler pages dev dist` (it serves the
+static build *and* the `functions/` directory together). Plain `vite preview`
+serves the static build only — `/api/contact` 404s there, and the form
+correctly falls back to `mailto:`.
 
 ## Notes
 
-- The contact form has **no backend** — it opens the visitor's mail client
-  (`mailto:`) as a graceful fallback. Wire `form.submit` to a real endpoint
-  (Cloudflare Worker, Formspree, etc.) to capture submissions.
-- Project `url: ""` renders a disabled "View" (no link) — drop in a live/repo
-  URL to enable.
+- Project `url: ""` renders a disabled link and the card still opens its
+  case study — drop in a live/repo URL to enable the external "View" link.
 - `prefers-reduced-motion` disables animations.

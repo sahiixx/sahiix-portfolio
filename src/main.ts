@@ -10,6 +10,10 @@ const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(pointer: fine)").matches;
 const supportsVT = "startViewTransition" in document;
 if (supportsVT) document.documentElement.classList.add("vt");
+// Gate reveal-hiding on JS actually running: if this script never executes
+// (JS error, crawler, unsupported browser), `.reveal` content stays visible
+// instead of being stuck at opacity:0 forever.
+document.documentElement.classList.add("js");
 
 // ── Render: identity ─────────────────────────────────────────────────────────
 $("#heroName").textContent = identity.name;
@@ -232,17 +236,28 @@ const io = new IntersectionObserver(
       }
     }
   },
-  { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+  { threshold: 0.1, rootMargin: "0px 0px 10% 0px" },
 );
 // stagger within each group — siblings share one delay sequence
 const groupIndex = new Map<ParentNode, number>();
-document.querySelectorAll(".reveal").forEach((el) => {
+const revealEls = document.querySelectorAll<HTMLElement>(".reveal");
+revealEls.forEach((el) => {
   const parent = el.parentElement!;
   const n = groupIndex.get(parent) ?? 0;
   groupIndex.set(parent, n + 1);
-  (el as HTMLElement).style.transitionDelay = `${Math.min(n * 80, 480)}ms`;
+  el.style.transitionDelay = `${Math.min(n * 80, 480)}ms`;
   io.observe(el);
 });
+// Failsafe: if the observer never fires (e.g. layout quirk on short viewports),
+// force-reveal anything still hidden after a short grace period.
+setTimeout(() => {
+  revealEls.forEach((el) => {
+    if (!el.classList.contains("in")) {
+      el.classList.add("in");
+      io.unobserve(el);
+    }
+  });
+}, 2500);
 
 // ── Scroll progress + nav state ───────────────────────────────────────────────
 const progress = $("#scrollProgress");

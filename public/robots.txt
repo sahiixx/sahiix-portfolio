@@ -1,4 +1,3 @@
-User-agent: *
+﻿User-agent: *
 Allow: /
-
-Sitemap: https://sahiix.os/sitemap.xml
+Sitemap: https://sahiix-portfolio.pages.dev/sitemap.xml

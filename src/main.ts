@@ -1,6 +1,13 @@
 // Single-file app logic: render data → wire interactions. No framework.
 import "./style.css";
-import { identity, projects, skillGroups, stats, type Project } from "./data";
+import {
+  identity,
+  projects,
+  skillGroups,
+  stats,
+  pilots,
+  type Project,
+} from "./data";
 
 const $ = <T extends HTMLElement = HTMLElement>(sel: string): T =>
   document.querySelector<T>(sel)!;
@@ -75,13 +82,13 @@ function projectCard(p: Project): HTMLElement {
   card.innerHTML = `
     <div class="project-top">
       <span class="project-index">${p.index}</span>
-      <span class="project-year">${p.year}</span>
+      <span class="project-year">${p.year}${p.badge ? ` · <span class="project-badge">${p.badge}</span>` : ""}</span>
     </div>
     <h3 class="project-name">${p.name}</h3>
     <p class="project-tagline">${p.tagline}</p>
     <p class="project-desc">${p.description}</p>
     <div class="project-stack">${p.stack.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
-    ${link('<span class="project-link-text">View</span><span class="project-arrow">→</span>')}
+    ${link('<span class="project-link-text">Open case study</span><span class="project-arrow">→</span>')}
   `;
   // prevent the external link from also triggering the card's nav
   const ext = card.querySelector<HTMLAnchorElement>(".project-link[href]");
@@ -89,6 +96,56 @@ function projectCard(p: Project): HTMLElement {
   return card;
 }
 $("#projectGrid").append(...projects.map(projectCard));
+
+// ── Pilots + looking-for ─────────────────────────────────────────────────────
+const pilotGrid = $("#pilotGrid");
+pilotGrid.append(
+  ...pilots.map((p) => {
+    const el = document.createElement("article");
+    el.className = "pilot-card reveal";
+    el.innerHTML = `
+      <p class="pilot-duration">${p.duration}</p>
+      <h3 class="pilot-title">${p.title}</h3>
+      <p class="pilot-price">${p.priceHint}</p>
+      <ul class="pilot-bullets">${p.bullets.map((b) => `<li>${b}</li>`).join("")}</ul>
+      <a class="btn btn-primary btn-block" href="${p.ctaHref}" ${p.ctaHref.startsWith("http") ? 'target="_blank" rel="noopener"' : ""}>${p.cta}</a>
+    `;
+    return el;
+  }),
+);
+
+const looking = $("#lookingFor");
+looking.innerHTML = `
+  <p class="section-kicker">Also looking for</p>
+  <div class="looking-grid">
+    ${identity.lookingFor
+      .map(
+        (l) => `
+      <div class="looking-card">
+        <strong>${l.role}</strong>
+        <span>${l.note}</span>
+      </div>`,
+      )
+      .join("")}
+  </div>
+`;
+
+// Contact channels (Telegram / phone / email) — always visible
+const channels = $("#contactChannels");
+channels.innerHTML = `
+  <a class="channel channel-tg" href="${identity.telegramHref}" target="_blank" rel="noopener">
+    <span class="channel-label">Telegram</span>
+    <strong>${identity.telegram}</strong>
+  </a>
+  <a class="channel" href="${identity.phoneHref}">
+    <span class="channel-label">Phone</span>
+    <strong>${identity.phone}</strong>
+  </a>
+  <a class="channel" href="mailto:${identity.email}">
+    <span class="channel-label">Email</span>
+    <strong>${identity.email}</strong>
+  </a>
+`;
 
 // ── Router: home vs case-study detail ───────────────────────────────────────────
 const homeRoot = $("#home");
@@ -112,7 +169,7 @@ function renderDetail(p: Project) {
   const paragraphs = p.longDescription.map((t) => `<p class="detail-p">${t}</p>`).join("");
   const highlights = p.highlights.map((h) => `<li class="detail-highlight">${h}</li>`).join("");
   const linkBlock = p.url
-    ? `<a class="btn btn-primary" href="${p.url}" target="_blank" rel="noopener">View project <span class="project-arrow">↗</span></a>`
+    ? `<a class="btn btn-primary" href="${p.url}" target="_blank" rel="noopener">Open live system <span class="project-arrow">↗</span></a>`
     : `<span class="btn btn-ghost btn-disabled">Link coming soon</span>`;
   detailRoot.innerHTML = `
     <div class="detail-inner">
@@ -126,6 +183,20 @@ function renderDetail(p: Project) {
         <div><span>Year</span><strong>${p.year}</strong></div>
       </div>
       <div class="detail-stack">${p.stack.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+      <div class="detail-casestudy">
+        <article class="cs-block">
+          <h2 class="detail-h">Problem</h2>
+          <p class="detail-p">${p.problem}</p>
+        </article>
+        <article class="cs-block">
+          <h2 class="detail-h">Architecture</h2>
+          <p class="detail-p">${p.architecture}</p>
+        </article>
+        <article class="cs-block">
+          <h2 class="detail-h">Status</h2>
+          <p class="detail-p">${p.statusNote}</p>
+        </article>
+      </div>
       <div class="detail-body">
         <section class="detail-overview">
           <h2 class="detail-h">Overview</h2>
@@ -134,7 +205,10 @@ function renderDetail(p: Project) {
         <section class="detail-highlights">
           <h2 class="detail-h">Highlights</h2>
           <ul class="detail-highlights-list">${highlights}</ul>
-          <div class="detail-actions">${linkBlock}</div>
+          <div class="detail-actions">
+            ${linkBlock}
+            <a class="btn btn-ghost" href="#pilots">60-day pilot</a>
+          </div>
         </section>
       </div>
     </div>
@@ -262,7 +336,9 @@ setTimeout(() => {
 // ── Scroll progress + nav state ───────────────────────────────────────────────
 const progress = $("#scrollProgress");
 const nav = $("#nav");
-const sections = ["work", "about", "skills", "contact"].map((id) => document.getElementById(id)!);
+const sections = ["work", "pilots", "about", "skills", "contact"].map(
+  (id) => document.getElementById(id)!,
+);
 const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("#navLinks a"));
 
 function onScroll() {

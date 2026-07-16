@@ -1,23 +1,27 @@
 // ── Portfolio content ───────────────────────────────────────────────────────
-// Everything visible on the site is defined here. Edit freely — the UI renders
-// from these arrays, so you can add/reorder projects or swap the identity without
-// touching layout code. URLs left empty ("" ) render as plain text with no link.
+// Hybrid: technical accuracy (live OS links) + GTM (NEXUS-first pilots, contact).
 
 export interface Project {
   id: string;
-  index: string;      // display index, e.g. "01"
+  index: string;
   name: string;
-  tagline: string;     // one-line pitch
-  description: string; // 2–3 sentence detail (card)
-  longDescription: string[]; // case-study paragraphs
-  highlights: string[];      // case-study feature bullets
-  role: string;        // what I did
-  status: string;      // shipped / live / WIP
-  stack: string[];     // tech tags
+  tagline: string;
+  description: string;
+  longDescription: string[];
+  /** Case study: problem → architecture → status */
+  problem: string;
+  architecture: string;
+  statusNote: string;
+  highlights: string[];
+  role: string;
+  status: string;
+  stack: string[];
   year: string;
-  url: string;         // live/repo link ("" = no link)
-  accent: string;      // CSS color for the card's hover glow
+  url: string;
+  accent: string;
   featured?: boolean;
+  /** Commercial emphasis label on card */
+  badge?: string;
 }
 
 export interface SkillGroup {
@@ -25,49 +29,126 @@ export interface SkillGroup {
   items: string[];
 }
 
+export interface PilotOffer {
+  title: string;
+  duration: string;
+  priceHint: string;
+  bullets: string[];
+  cta: string;
+  ctaHref: string;
+}
+
 export const identity = {
   brand: "SAHIIX",
   name: "SAHIIX",
-  // Rotating words after "I build " in the hero.
   rotator: [
+    "Dubai deal engines that close the loop.",
     "AI-native operating systems.",
     "real-time voice agents.",
-    "developer tools that ship.",
     "systems that control the machine.",
   ],
   tagline:
-    "Independent engineer building AI-native operating systems and real-time voice agents — from the OS layer to the checkout button.",
+    "Dubai-based builder of AI-native OS shells, live real-estate pipelines, and voice agents that actually run the stack — not slideware.",
   location: "Dubai, UAE",
-  availability: "Available for select work",
+  availability: "Open for 60-day pilots · select work",
   bio: [
-    "I design and build end-to-end AI systems: a voice-first operating environment that actually controls the machine, a deal engine powering a live real-estate pipeline, and a research-routing agency that auto-discovers and delegates across hundreds of repos.",
-    "My focus is the seam between LLMs and the operating system — streaming voice, tool-calling, OS control, and the safety primitives that make a model a useful operator rather than a chat box.",
+    "I design and ship end-to-end systems: a live NEXUS real-estate deal engine with WhatsApp, a modular SAHIIX OS on Neon + Cloudflare, and Jarvis — a voice agent with tiered OS control.",
+    "Focus: the seam between LLMs and production infrastructure — streaming voice, tool-calling, safety gates, and commercial deal flow in Dubai (RERA-aware).",
   ],
   email: "sahiixofficial@gmail.com",
+  phone: "+971 58 547 6077",
+  phoneHref: "tel:+971585476077",
+  telegram: "@Clawdsahiixbot",
+  telegramHref: "https://t.me/Clawdsahiixbot",
   socials: [
-    { label: "Link in Bio", handle: "taponn.me/toknowme", url: "https://taponn.me/toknowme?utm_source=ig&utm_medium=social&utm_content=link_in_bio" },
+    {
+      label: "Telegram",
+      handle: "@Clawdsahiixbot",
+      url: "https://t.me/Clawdsahiixbot",
+    },
+    {
+      label: "Email",
+      handle: "sahiixofficial@gmail.com",
+      url: "mailto:sahiixofficial@gmail.com",
+    },
+    {
+      label: "Phone",
+      handle: "+971 58 547 6077",
+      url: "tel:+971585476077",
+    },
+    {
+      label: "Live OS",
+      handle: "sahiixx-os.pages.dev",
+      url: "https://sahiixx-os.pages.dev",
+    },
+    {
+      label: "Link in Bio",
+      handle: "taponn.me/toknowme",
+      url: "https://taponn.me/toknowme?utm_source=portfolio&utm_medium=web",
+    },
+  ],
+  lookingFor: [
+    { role: "Infra / full-stack eng", note: "Partner on OS modules, Cloudflare edge, Neon." },
+    { role: "GTM / BD (Dubai real estate)", note: "Pilot pilots, brokerage intros, RERA-aware offers." },
+    { role: "Pre-seed conversation", note: "Capital for productizing NEXUS + OS as a vertical stack." },
   ],
 };
 
+/** NEXUS first — commercial lead. Swiss-Army + LLM-Council dropped from public catalog. */
 export const projects: Project[] = [
   {
-    id: "sahiix-os",
+    id: "nexus",
     index: "01",
-    name: "SAHIIX OS",
-    tagline: "An AI-native operating environment — live on Cloudflare.",
+    name: "NEXUS",
+    tagline: "Live Dubai off-market deal engine + WhatsApp.",
     description:
-      "Production OS shell on Neon + Cloudflare Pages: Command Center, NEXUS estate bridge, Goldmine CRM, SARA, Signals, GapClaw, Documents, Jarvis, System Status. React 19 + Hono + tRPC + Drizzle. Live counts, JWT auth, Workers AI probe, Ollama Cloud for Jarvis.",
+      "Production pipeline on WSL: SQLite + Node, Palm owners, goldmine tiers, WhatsApp bridge. Bridged into SAHIIX OS for live lead import. Built for brokerage velocity under RERA-aware messaging.",
     longDescription: [
-      "SAHIIX OS is the through-line of everything I build: a single AI-native environment where voice, automation, deal flow, and content live behind one shell. v4.3 is full-stack and modular — typed tRPC over Hono, Drizzle on Neon Postgres, Hyperdrive optional, Workers AI binding, and a Cloudflare Pages `_worker.js` deploy path.",
-      "Nine module surfaces compose the product: Command Center, NEXUS (with live estate leads via tunnel), Goldmine CRM, SARA, Signals, GapClaw, Documents (OCR + FTS), Jarvis voice, and System Status (integrations + audit). Hub shows real Neon moduleCounts; mutations write activity_events. Demo mode only if the DB is unreachable.",
-      "Ops is first-class: /api/ready, /api/metrics, smoke-prod and real-world task scripts, rate-limited login, bootstrap admin, dealUpdate pipeline, and estate import (ESTATE-* deals). Responsive OS chrome with LIVE/DEMO/ESTATE chips.",
+      "NEXUS is the commercial spine: a live deal engine, not a mock CRM. Source of truth is SQLite behind a Node API on WSL (ports 3001/3002), with WhatsApp closing the loop to prospects.",
+      "Goldmine tiers and Palm priority lists rank who to call; templates stay RERA-aware. The modular OS NEXUS page can pull live estate leads over a Cloudflare tunnel and import them as Neon deals (ESTATE-*).",
     ],
+    problem:
+      "Brokerages drown in unstructured inventory and chat — no ranked queue, no compliance-aware templates, no path from lead → owner → WhatsApp without five tabs and a spreadsheet.",
+    architecture:
+      "WSL Node API + SQLite (estate.db) · WhatsApp bot service · goldmine / Palm ranking · optional cloudflared expose · SAHIIX OS NEXUS module imports leads into Neon for the unified OS shell.",
+    statusNote:
+      "Live on this workstation (systemd-user estate-api + whatsapp). OS bridge at sahiixx-os.pages.dev/nexus when tunnel is up.",
     highlights: [
-      "Live: https://sahiixx-os.pages.dev — Neon demo=false, JWT admin, Workers AI + Ollama Cloud (glm-5.2).",
-      "9 modules + System Status; live Hub counts (agents/deals/contacts from DB).",
-      "NEXUS estate bridge: cloudflared → WSL estate-api; import lead → Neon deal.",
-      "Audit trail, Prometheus metrics, CI smoke against production.",
-      "UI: responsive shell, mobile drawer, Command Deck hub, empty states.",
+      "Live API on :3001 / WhatsApp on :3002 under systemd-user.",
+      "Goldmine tiers + Palm high-priority owners — chase order, not raw dumps.",
+      "RERA-aware framing for off-market / DLD-scale contact work.",
+      "Import path: live lead → Neon deal (ESTATE-*) inside SAHIIX OS.",
+    ],
+    role: "Architect & sole engineer",
+    status: "Live · pilot-ready",
+    stack: ["Node", "SQLite", "WhatsApp", "WSL", "Cloudflare Tunnel"],
+    year: "2025–26",
+    url: "https://sahiixx-os.pages.dev/nexus",
+    accent: "#f59e0b",
+    featured: true,
+    badge: "LEAD PRODUCT",
+  },
+  {
+    id: "sahiix-os",
+    index: "02",
+    name: "SAHIIX OS",
+    tagline: "AI-native OS shell — live on Cloudflare.",
+    description:
+      "v4.3 production: React 19 + Hono + tRPC + Drizzle on Neon. Command Center, Goldmine, SARA, Signals, GapClaw, Documents, Jarvis, Status. JWT, audit, Workers AI, Ollama Cloud.",
+    longDescription: [
+      "SAHIIX OS is the unified shell: voice, deals, CRM, content, and ops behind one edge deploy. Neon Postgres is live (demo=false); Hub shows real moduleCounts; mutations write activity_events.",
+      "Nine surfaces: Command Center, NEXUS, Goldmine, SARA, Signals, GapClaw, Documents (OCR+FTS), Jarvis, System Status. Ops: /api/ready, metrics, smoke scripts, rate-limited auth.",
+    ],
+    problem:
+      "Tools for agents, deals, and voice lived as separate scripts and ports — no single authenticated shell, no audit, no production deploy path.",
+    architecture:
+      "Cloudflare Pages `_worker.js` · Hono + tRPC 11 · Drizzle/Neon · Hyperdrive optional · Workers AI binding · Ollama Cloud for Jarvis · responsive OS chrome.",
+    statusNote: "Live at https://sahiixx-os.pages.dev — v4.3.0, Neon live, production smoke green.",
+    highlights: [
+      "Live: sahiixx-os.pages.dev — JWT admin, Workers AI probe, Ollama Cloud glm-5.2.",
+      "9 modules + live Hub counts from Neon.",
+      "Audit trail, Prometheus metrics, CI / smoke-prod.",
+      "Responsive shell: mobile drawer, LIVE/DEMO/ESTATE chips.",
     ],
     role: "Architect & sole engineer",
     status: "Live — v4.3",
@@ -76,48 +157,57 @@ export const projects: Project[] = [
     url: "https://sahiixx-os.pages.dev",
     accent: "#ff4d4d",
     featured: true,
+    badge: "PLATFORM",
   },
   {
     id: "jarvis",
-    index: "02",
+    index: "03",
     name: "Jarvis",
-    tagline: "A real-time voice agent that controls the machine.",
+    tagline: "Voice agent that controls the machine.",
     description:
-      "Streaming voice agent that speaks as it thinks — keyless TTS via a persistent Windows SAPI process, an OS-control tool layer with tiered safety (read / mutate / destructive + CONFIRM), raw-PowerShell escape hatch, and a tool-calling loop over Kimi / Ollama Cloud.",
+      "SSE voice agent: speaks as it thinks, tiered OS tools (read / mutate / CONFIRM), optional SAPI keyless TTS. Hosted at /jarvis on the live OS with Ollama Cloud.",
     longDescription: [
-      "Jarvis is a streaming voice agent that speaks as it thinks, then acts on the machine. Token streaming and per-sentence TTS are multiplexed over a single SSE stream, so the voice leads the text — audio interleaves with the LLM's tokens on the wire.",
-      "The interesting constraint was cost: paid TTS keys come and go. So TTS is keyless by default — a persistent Windows SAPI voice process that stays warm, cutting synth latency from ~600ms cold to ~25–45ms per sentence. ElevenLabs remains optional when a key is present. A voices endpoint falls back to installed SAPI voices.",
-      "Safety: three tiers — read-only runs ungated, mutating ops need a toggle, destructive ops need a per-op CONFIRM — and bounded tools where the model only ever controls quoted string values. Raw-PowerShell sits behind its own two-click flag, blocklist, and dry-run preview. Production OS shell hosts Jarvis at /jarvis with Ollama Cloud (glm-5.2) as the active edge provider.",
+      "Jarvis multiplexes token stream and TTS so voice leads text. Safety is three-tier OS control so a model can operate without free-form shell disaster.",
+      "Embedded in SAHIIX OS; provider stack prefers Ollama Cloud (glm-5.2) with local fallback.",
     ],
+    problem:
+      "Chatbots don't move a Windows/WSL box. Voice demos die without keys. Ungated shell tools are a liability.",
+    architecture:
+      "SSE turn stream · tool registry with CONFIRM gates · SAPI warm process for keyless TTS · Ollama Cloud / Kimi providers · /jarvis UI in OS shell.",
+    statusNote: "Live module at sahiixx-os.pages.dev/jarvis; local OS-control drivers verified on workstation.",
     highlights: [
-      "Keyless streaming TTS — warm SAPI process, ~25–45ms synth; optional ElevenLabs.",
-      "Three-tier OS-control safety: read / mutate / destructive-CONFIRM.",
-      "Tool-calling over Ollama Cloud (glm-5.2) with local Ollama fallback.",
-      "Embedded in live SAHIIX OS at /jarvis on Cloudflare Pages.",
+      "Keyless warm SAPI TTS path; optional ElevenLabs.",
+      "Read / mutate / destructive-CONFIRM tool tiers.",
+      "Live edge path: Ollama Cloud glm-5.2.",
     ],
     role: "Architect & sole engineer",
-    status: "Live + actively extended",
-    stack: ["SSE", "Ollama Cloud", "Kimi", "PowerShell", ".NET", "WSL"],
+    status: "Live + extended",
+    stack: ["SSE", "Ollama Cloud", "PowerShell", ".NET", "WSL"],
     year: "2026",
     url: "https://sahiixx-os.pages.dev/jarvis",
     accent: "#7c5cff",
     featured: true,
+    badge: "VOICE",
   },
   {
     id: "opa",
-    index: "03",
+    index: "04",
     name: "One Person Agency",
-    tagline: "An agency that auto-discovers 170+ repos and routes tasks.",
+    tagline: "170+ repos, one routing layer.",
     description:
-      "A real Python package (FastAPI + MCP + Typer CLI, entry point `opa`) that discovers repositories, indexes their capabilities, and routes a task to the best specialized tool across the fleet — a one-person agency that delegates like a team.",
+      "Python package (FastAPI + MCP + Typer `opa`) that discovers repos, scores capabilities, and dispatches tasks — agency behavior for one operator.",
     longDescription: [
-      "One Person Agency (OPA) is the idea that a single person with the right routing can behave like a team. It's a real installable Python package — `pip install`-able, a `opa` CLI entry point, a FastAPI service, and an MCP server — that auto-discovers the 170+ repositories on this machine, indexes what each can do, and routes an incoming task to the best-fit tool across the fleet.",
-      "Where a person would context-switch across a dozen repos, OPA delegates: it reads the task, matches it against indexed capabilities, and hands off. It's the routing layer that turns a pile of side-projects into a usable agency.",
+      "OPA turns a pile of specialized repos into a fleet: discover, register, route, execute. CLI + API + MCP so agents and humans share the same dispatcher.",
     ],
+    problem:
+      "Context-switching across 170+ repos kills throughput; no single intent→tool path.",
+    architecture:
+      "Python package · registry JSON · FastAPI · MCP server · Typer CLI · adapter layers for career/security/video modules.",
+    statusNote: "Shipped package; local uvicorn agency API used alongside the OS stack.",
     highlights: [
-      "Installable Python package with a `opa` Typer CLI, FastAPI service, and an MCP server.",
-      "Auto-discovers and indexes 170+ local repositories by capability.",
-      "Routes a task to the best-fit specialized tool across the fleet instead of context-switching.",
+      "`opa` CLI + FastAPI + MCP.",
+      "Auto-discovery + keyword/config routing.",
+      "Pluggable adapters across categories.",
     ],
     role: "Architect & sole engineer",
     status: "Shipped",
@@ -126,91 +216,54 @@ export const projects: Project[] = [
     url: "https://github.com/sahiixx/sahiixx-agency",
     accent: "#22d3ee",
   },
-  {
-    id: "nexus",
-    index: "04",
-    name: "NEXUS",
-    tagline: "A live Dubai real-estate deal engine + WhatsApp bot.",
-    description:
-      "Production deal pipeline on WSL (SQLite + Node) sourcing off-market inventory, tracking Palm owners and goldmine tiers, and closing the loop with a WhatsApp bridge. Bridged into SAHIIX OS NEXUS module via Cloudflare Tunnel for live leads import.",
-    longDescription: [
-      "NEXUS is a production real-estate deal engine running live on WSL. The source of truth is a SQLite database behind a Node API; on top of it sits an off-market sourcing pipeline, a Palm-owners high-priority list, a goldmine-tier engine, and a WhatsApp bridge that closes the loop with prospects.",
-      "The hard part isn't the stack — it's compliance at Dubai scale. Sourcing templates are RERA-compliant, the contact graph spans ~18.9k DLD entries, and the deal tiers are real. The modular OS NEXUS page can import live estate leads into Neon deals (ESTATE-*) when ESTATE_API_URL is tunnelled.",
-    ],
-    highlights: [
-      "Live deal pipeline on WSL — SQLite + Node API on ports 3001/3002 (systemd-user).",
-      "WhatsApp bridge under systemd-user; outbound path for messaging loops.",
-      "RERA-aware sourcing + DLD-scale contact graph.",
-      "OS bridge: live leads → Neon deal import on sahiixx-os.pages.dev/nexus.",
-    ],
-    role: "Architect & sole engineer",
-    status: "Live",
-    stack: ["Node", "SQLite", "WhatsApp API", "WSL", "Cloudflare Tunnel"],
-    year: "2025",
-    url: "https://sahiixx-os.pages.dev/nexus",
-    accent: "#f59e0b",
-  },
-  {
-    id: "kimi-workspace",
-    index: "05",
-    name: "LLM-Council Workspace",
-    tagline: "A multi-model research orchestrator.",
-    description:
-      "A 16-command workspace orchestrator (status / route / council / sweep / validate) wiring AI-engineering and Karpathy-style skill libraries — runs multi-model councils, parallel research sweeps, and a generated research dashboard.",
-    longDescription: [
-      "The LLM-Council Workspace is my research routing layer for AI-engineering work. A 16-command orchestrator (`status / route / smart-route / usecase / council / sweep / validate / …`) wires together AI-engineering and Karpathy-style skill libraries and runs them across local models.",
-      "It's where multi-model councils, parallel research sweeps, and validation pipelines actually run. Four registered patterns — ai-engineer-patterns, karpathy-patterns, autoresearch, and a device-AI pattern — are wired and healthy, and the workspace generates its own research dashboard from the runs.",
-    ],
-    highlights: [
-      "16-command orchestrator: route, smart-route, council, sweep, validate, dashboard, meta, and more.",
-      "Four healthy registered patterns (ai-engineer, karpathy, autoresearch, device-AI).",
-      "Co-located skill libraries: Andrej-Karpathy skills, llm-council, nanochat, minGPT.",
-      "Generates a research dashboard from sweep/council runs.",
-    ],
-    role: "Architect & sole engineer",
-    status: "Shipped",
-    stack: ["Python", "Ollama", "Multi-model", "Skills"],
-    year: "2025",
-    url: "",
-    accent: "#34d399",
-  },
-  {
-    id: "swiss-army",
-    index: "06",
-    name: "Swiss-Army Utility",
-    tagline: "A quiet desktop tray that does the small things.",
-    description:
-      "An Electron tray app — clipboard history, screenshots, a file organizer, and an app launcher. Small, native, always one click away.",
-    longDescription: [
-      "Swiss-Army Utility is the small, always-there tool. An Electron tray app that holds the things you reach for a hundred times a day — clipboard history, screenshots, a file organizer, and an app launcher — one click away in the system tray.",
-      "It's intentionally boring: native, fast, and quiet. No accounts, no cloud, no framework theater — just the convenience primitives that make a Windows box livable.",
-    ],
-    highlights: [
-      "Electron tray app — clipboard history, screenshots, file organizer, app launcher.",
-      "One-click access from the system tray; native and quiet.",
-      "No accounts, no cloud — runs fully local.",
-    ],
-    role: "Architect & sole engineer",
-    status: "Shipped",
-    stack: ["Electron", "TypeScript"],
-    year: "2024",
-    url: "",
-    accent: "#e879f9",
-  },
 ];
 
 export const skillGroups: SkillGroup[] = [
   { label: "Languages", items: ["TypeScript", "Python", "SQL", "PowerShell", "Bash"] },
-  { label: "Frontend", items: ["React 19", "Vite", "Tailwind", "Canvas / DOM", "SSE streaming"] },
-  { label: "Backend", items: ["Hono", "tRPC", "FastAPI", "Drizzle ORM", "Node"] },
-  { label: "Data / Infra", items: ["Postgres / Neon", "SQLite", "Cloudflare Pages", "Workers AI", "Hyperdrive", "WSL2"] },
-  { label: "AI / LLM", items: ["Ollama Cloud", "Kimi / Moonshot", "Workers AI", "Tool-calling", "TTS / STT", "MCP"] },
-  { label: "Systems", items: ["PowerShell / .NET", "Automation", "System.Speech", "cloudflared"] },
+  { label: "Frontend", items: ["React 19", "Vite", "Tailwind", "SSE", "DOM"] },
+  { label: "Backend", items: ["Hono", "tRPC", "FastAPI", "Drizzle", "Node"] },
+  {
+    label: "Data / Edge",
+    items: ["Neon Postgres", "SQLite", "Cloudflare Pages", "Workers AI", "Hyperdrive"],
+  },
+  {
+    label: "AI",
+    items: ["Ollama Cloud", "Kimi", "Tool-calling", "TTS / STT", "MCP"],
+  },
+  { label: "Systems", items: ["WSL2", "systemd-user", "cloudflared", "WhatsApp bots"] },
 ];
 
 export const stats = [
-  { value: "9", label: "OS modules live" },
-  { value: "170+", label: "repos auto-routed" },
+  { value: "Live", label: "NEXUS pipeline" },
   { value: "v4.3", label: "OS on Cloudflare" },
-  { value: "5", label: "live WSL services" },
+  { value: "9", label: "OS modules" },
+  { value: "60d", label: "pilot window" },
+];
+
+export const pilots: PilotOffer[] = [
+  {
+    title: "NEXUS Deal Desk Pilot",
+    duration: "60 days",
+    priceHint: "Fixed pilot · Dubai brokerage / sourcing teams",
+    bullets: [
+      "Stand up ranked lead queue (goldmine / Palm tiers) + WhatsApp loop.",
+      "RERA-aware message templates and owner prioritization.",
+      "Optional bridge into SAHIIX OS for unified deal view.",
+      "Weekly ops review; success = contacted pipeline + closed-loop chats.",
+    ],
+    cta: "Start NEXUS pilot",
+    ctaHref: "https://t.me/Clawdsahiixbot",
+  },
+  {
+    title: "SAHIIX OS + Jarvis Pilot",
+    duration: "60 days",
+    priceHint: "Operators who want voice + edge shell on their stack",
+    bullets: [
+      "Deploy OS shell (or white-label modules) on Cloudflare + Neon.",
+      "Jarvis voice path with safety tiers for internal tools.",
+      "Status / audit / metrics so the system is operable, not a demo.",
+    ],
+    cta: "Discuss OS pilot",
+    ctaHref: "mailto:sahiixofficial@gmail.com?subject=SAHIIX%20OS%2060-day%20pilot",
+  },
 ];

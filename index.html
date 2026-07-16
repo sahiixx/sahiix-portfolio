@@ -8,7 +8,7 @@
     <meta name="author" content="SAHIIX" />
     <meta name="robots" content="index, follow" />
     <!-- TODO: confirm deployed domain, then set canonical + og:url to it. -->
-    <link rel="canonical" href="https://sahiix.os/" />
+    <link rel="canonical" href="https://sahiix-portfolio.pages.dev/" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
     <title>SAHIIX — AI-native operating systems & real-time voice agents</title>
@@ -22,7 +22,7 @@
     <meta property="og:site_name" content="SAHIIX" />
     <meta property="og:title" content="SAHIIX — AI-native operating systems & real-time voice agents" />
     <meta property="og:description" content="Independent engineer building AI-native operating systems and real-time voice agents — from the OS layer to the checkout button." />
-    <meta property="og:url" content="https://sahiix.os/" />
+    <meta property="og:url" content="https://sahiix-portfolio.pages.dev/" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="SAHIIX — AI-native operating systems & real-time voice agents" />
     <meta name="twitter:description" content="Independent engineer building AI-native operating systems and real-time voice agents — from the OS layer to the checkout button." />
@@ -35,7 +35,7 @@
         "name": "SAHIIX",
         "jobTitle": "AI-Native Systems Engineer",
         "description": "Builds AI-native operating systems and real-time voice agents — from the OS layer to the checkout button.",
-        "url": "https://sahiix.os/",
+        "url": "https://sahiix-portfolio.pages.dev/",
         "address": { "@type": "PostalAddress", "addressLocality": "Dubai", "addressCountry": "AE" },
         "knowsAbout": [
           "AI-native operating systems", "real-time voice agents", "streaming TTS",
@@ -64,11 +64,12 @@
       </a>
       <nav class="nav-links" id="navLinks">
         <a href="#work">Work</a>
+        <a href="#pilots">Pilots</a>
         <a href="#about">About</a>
         <a href="#skills">Skills</a>
         <a href="#contact">Contact</a>
       </nav>
-      <a class="nav-cta" href="#contact">Let's talk</a>
+      <a class="nav-cta" href="#pilots">60-day pilot</a>
     </header>
 
     <main id="top">
@@ -90,8 +91,9 @@
           </p>
           <p class="hero-tagline reveal" id="heroTagline"></p>
           <div class="hero-actions reveal">
-            <a class="btn btn-primary" href="#work">View work</a>
-            <a class="btn btn-ghost" href="#contact">Get in touch</a>
+            <a class="btn btn-primary" href="#pilots">Start a 60-day pilot</a>
+            <a class="btn btn-ghost" href="#work">View work</a>
+            <a class="btn btn-ghost" href="https://sahiixx-os.pages.dev" target="_blank" rel="noopener">Live OS ↗</a>
           </div>
           <div class="hero-stats reveal" id="heroStats"></div>
         </div>
@@ -105,10 +107,21 @@
       <section class="section" id="work">
         <div class="section-head">
           <p class="section-kicker">Selected work</p>
-          <h2 class="section-title">Things I've built.</h2>
-          <p class="section-sub">Operating systems, voice agents, and tools — shipped and running.</p>
+          <h2 class="section-title">Shipped systems. Commercial outcomes.</h2>
+          <p class="section-sub">NEXUS for Dubai deal flow · SAHIIX OS + Jarvis for the operator shell — live, not mockups.</p>
         </div>
         <div class="project-grid" id="projectGrid"></div>
+      </section>
+
+      <!-- pilots -->
+      <section class="section section-pilots" id="pilots">
+        <div class="section-head">
+          <p class="section-kicker">Engagements</p>
+          <h2 class="section-title">60-day pilots.</h2>
+          <p class="section-sub">Fixed window. Production systems. Clear weekly checkpoints.</p>
+        </div>
+        <div class="pilot-grid" id="pilotGrid"></div>
+        <div class="looking-for reveal" id="lookingFor"></div>
       </section>
 
       <!-- about -->
@@ -145,7 +158,9 @@
         <div class="contact-card reveal">
           <p class="section-kicker">Contact</p>
           <h2 class="section-title contact-title">Let's build something that ships.</h2>
-          <p class="contact-sub">Have a system in mind, or want to talk voice agents, OS control, or AI infrastructure? Send a note.</p>
+          <p class="contact-sub">Pilots, infra partners, GTM in Dubai real estate — Telegram is fastest.</p>
+
+          <div class="contact-channels" id="contactChannels"></div>
 
           <form class="contact-form" id="contactForm" novalidate>
             <div class="field-row">

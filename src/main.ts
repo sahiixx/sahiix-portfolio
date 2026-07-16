@@ -79,16 +79,22 @@ function projectCard(p: Project): HTMLElement {
     p.url
       ? `<a class="project-link" href="${p.url}" target="_blank" rel="noopener">${inner}</a>`
       : `<span class="project-link project-caselink">Case study <span class="project-arrow">→</span></span>`;
+  const media = p.image
+    ? `<div class="project-media"><img src="${p.image}" alt="${p.name} product UI" loading="lazy" width="960" height="540" /></div>`
+    : "";
   card.innerHTML = `
-    <div class="project-top">
-      <span class="project-index">${p.index}</span>
-      <span class="project-year">${p.year}${p.badge ? ` · <span class="project-badge">${p.badge}</span>` : ""}</span>
+    ${media}
+    <div class="project-body">
+      <div class="project-top">
+        <span class="project-index">${p.index}</span>
+        <span class="project-year">${p.year}${p.badge ? ` · <span class="project-badge">${p.badge}</span>` : ""}</span>
+      </div>
+      <h3 class="project-name">${p.name}</h3>
+      <p class="project-tagline">${p.tagline}</p>
+      <p class="project-desc">${p.description}</p>
+      <div class="project-stack">${p.stack.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+      ${link('<span class="project-link-text">Open case study</span><span class="project-arrow">→</span>')}
     </div>
-    <h3 class="project-name">${p.name}</h3>
-    <p class="project-tagline">${p.tagline}</p>
-    <p class="project-desc">${p.description}</p>
-    <div class="project-stack">${p.stack.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
-    ${link('<span class="project-link-text">Open case study</span><span class="project-arrow">→</span>')}
   `;
   // prevent the external link from also triggering the card's nav
   const ext = card.querySelector<HTMLAnchorElement>(".project-link[href]");
@@ -171,12 +177,16 @@ function renderDetail(p: Project) {
   const linkBlock = p.url
     ? `<a class="btn btn-primary" href="${p.url}" target="_blank" rel="noopener">Open live system <span class="project-arrow">↗</span></a>`
     : `<span class="btn btn-ghost btn-disabled">Link coming soon</span>`;
+  const heroImg = p.image
+    ? `<div class="detail-hero"><img src="${p.image}" alt="${p.name} interface" width="1200" height="675" /></div>`
+    : "";
   detailRoot.innerHTML = `
     <div class="detail-inner">
       <a class="detail-back" href="#work"><span class="project-arrow">←</span> All work</a>
       <p class="detail-eyebrow"><span class="detail-index">${p.index}</span> · ${p.year} · <span class="detail-status">${p.status}</span></p>
       <h1 class="detail-name">${p.name}</h1>
       <p class="detail-tagline">${p.tagline}</p>
+      ${heroImg}
       <div class="detail-meta">
         <div><span>Role</span><strong>${p.role}</strong></div>
         <div><span>Status</span><strong>${p.status}</strong></div>

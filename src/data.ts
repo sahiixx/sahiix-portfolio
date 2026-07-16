@@ -22,6 +22,8 @@ export interface Project {
   featured?: boolean;
   /** Commercial emphasis label on card */
   badge?: string;
+  /** Optional product screenshot under /screenshots/ */
+  image?: string;
 }
 
 export interface SkillGroup {
@@ -127,6 +129,7 @@ export const projects: Project[] = [
     accent: "#f59e0b",
     featured: true,
     badge: "LEAD PRODUCT",
+    image: "./screenshots/nexus.jpg",
   },
   {
     id: "sahiix-os",
@@ -158,6 +161,7 @@ export const projects: Project[] = [
     accent: "#ff4d4d",
     featured: true,
     badge: "PLATFORM",
+    image: "./screenshots/sahiix-os.jpg",
   },
   {
     id: "jarvis",
@@ -188,6 +192,7 @@ export const projects: Project[] = [
     accent: "#7c5cff",
     featured: true,
     badge: "VOICE",
+    image: "./screenshots/jarvis.jpg",
   },
   {
     id: "opa",

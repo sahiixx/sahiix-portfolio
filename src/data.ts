@@ -245,6 +245,101 @@ export const stats = [
   { value: "60d", label: "pilot window" },
 ];
 
+/**
+ * Live systems status — the credibility device for investor conversations.
+ * Status is honest: only what is deployed/reachable is "live"/"shipped".
+ * Update this as modules move in-dev → pilot/live.
+ */
+export type SystemStatus = "live" | "shipped" | "in-dev" | "concept";
+export interface System {
+  id: string;
+  name: string;
+  layer: string;
+  status: SystemStatus;
+  note: string;
+  stack: string[];
+  url: string;
+}
+export const systems: System[] = [
+  {
+    id: "opa",
+    name: "sahiixx-agency (OPA)",
+    layer: "Kernel",
+    status: "shipped",
+    note:
+      "Multi-agent dispatcher: discovers repos, scores capability, routes intent→task across 100+ repos via CLI/REST/MCP. 461 tests green; discovery adapter built this session.",
+    stack: ["Python", "FastAPI", "MCP", "Typer"],
+    url: "https://github.com/sahiixx/sahiixx-agency",
+  },
+  {
+    id: "sahiix-os",
+    name: "SAHIIX OS",
+    layer: "OS",
+    status: "live",
+    note:
+      "Unified broker shell: command center, deals, CRM, docs, voice. React 19 + Hono + tRPC + Drizzle on Neon, Cloudflare Pages. v4.3, production smoke green.",
+    stack: ["React 19", "Hono", "tRPC", "Drizzle", "Neon", "Cloudflare"],
+    url: "https://sahiixx-os.pages.dev",
+  },
+  {
+    id: "nexus",
+    name: "NEXUS",
+    layer: "OS",
+    status: "live",
+    note:
+      "Dubai off-market deal engine + WhatsApp. SQLite + Node on WSL, goldmine/Palm ranking, RERA-aware. Lead→CRM loop closed.",
+    stack: ["Node", "SQLite", "WhatsApp", "WSL", "Cloudflare Tunnel"],
+    url: "https://sahiixx-os.pages.dev/nexus",
+  },
+  {
+    id: "jarvis",
+    name: "Jarvis",
+    layer: "Voice",
+    status: "live",
+    note:
+      "SSE voice agent with tiered OS control (read/mutate/CONFIRM). Embedded in SAHIIX OS; Ollama Cloud glm-5.2.",
+    stack: ["SSE", "Ollama Cloud", "PowerShell", ".NET", "WSL"],
+    url: "https://sahiixx-os.pages.dev/jarvis",
+  },
+  {
+    id: "swarm",
+    name: "Sovereign Swarm",
+    layer: "Kernel",
+    status: "in-dev",
+    note:
+      "Multi-agent runtime with capability-verified agents + governance. The orchestration kernel under OPA. Roadmap build.",
+    stack: ["Python", "event-bus"],
+    url: "",
+  },
+  {
+    id: "clearwing",
+    name: "Clearwing",
+    layer: "Security",
+    status: "concept",
+    note: "Agent safety / compliance layer (Agent Trust, Lyrie-style) — planned into the OS kernel.",
+    stack: ["governance"],
+    url: "",
+  },
+  {
+    id: "friday",
+    name: "Friday OS / Termux",
+    layer: "Edge",
+    status: "in-dev",
+    note: "Voice + edge + on-device agents; Android/Termux pipelines.",
+    stack: ["Termux", "on-device"],
+    url: "",
+  },
+  {
+    id: "intel",
+    name: "ae-lead-scraper / graph-sight",
+    layer: "Intel",
+    status: "in-dev",
+    note: "UAE data ingestion, memory, trust, GEO matching for the deal engine.",
+    stack: ["scraping", "memory", "matching"],
+    url: "",
+  },
+];
+
 export const pilots: PilotOffer[] = [
   {
     title: "NEXUS Deal Desk Pilot",

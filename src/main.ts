@@ -6,6 +6,7 @@ import {
   skillGroups,
   stats,
   pilots,
+  systems,
   type Project,
 } from "./data";
 
@@ -275,6 +276,38 @@ $("#skillGrid").append(
   }),
 );
 
+// ── Render: systems status panel ──────────────────────────────────────────
+const STATUS_LABEL: Record<string, string> = {
+  live: "LIVE",
+  shipped: "SHIPPED",
+  "in-dev": "IN DEV",
+  concept: "CONCEPT",
+};
+function systemCard(s: (typeof systems)[number]): HTMLElement {
+  const card = document.createElement("article");
+  card.className = "system-card reveal";
+  card.style.setProperty("--accent", "var(--accent)");
+  card.dataset.status = s.status;
+  const link = s.url
+    ? `<a class="system-link" href="${s.url}" target="_blank" rel="noopener">Open <span class="system-arrow">↗</span></a>`
+    : `<span class="system-link system-nolink">Link coming soon</span>`;
+  card.innerHTML = `
+    <div class="system-top">
+      <span class="system-layer">${s.layer}</span>
+      <span class="system-status status-${s.status}">${STATUS_LABEL[s.status] ?? s.status}</span>
+    </div>
+    <h3 class="system-name">${s.name}</h3>
+    <p class="system-note">${s.note}</p>
+    <div class="system-stack">${s.stack.map((t) => `<span class="tag">${t}</span>`).join("")}</div>
+    ${link}
+  `;
+  const ext = card.querySelector<HTMLAnchorElement>(".system-link[href]");
+  if (ext) ext.addEventListener("click", (e) => e.stopPropagation());
+  return card;
+}
+const systemGrid = document.getElementById("systemGrid");
+if (systemGrid) systemGrid.append(...systems.map(systemCard));
+
 // ── Hero rotator (typewriter) ─────────────────────────────────────────────────
 const rotatorEl = $("#rotatorWord");
 let ri = 0;
@@ -346,7 +379,7 @@ setTimeout(() => {
 // ── Scroll progress + nav state ───────────────────────────────────────────────
 const progress = $("#scrollProgress");
 const nav = $("#nav");
-const sections = ["work", "pilots", "about", "skills", "contact"].map(
+const sections = ["work", "pilots", "about", "skills", "systems", "contact"].map(
   (id) => document.getElementById(id)!,
 );
 const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("#navLinks a"));

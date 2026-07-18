@@ -1,5 +1,6 @@
 // Single-file app logic: render data → wire interactions. No framework.
 import "./style.css";
+import { initFx } from "./particles";
 import {
   identity,
   projects,
@@ -520,3 +521,24 @@ form.addEventListener("submit", async (e) => {
   submitBtn.disabled = false;
   submitBtn.textContent = origText;
 });
+
+// ── Constellation fx: starfield + particle hero name (additive layer) ─────────
+// Booted after first render so the hero name has its final layout. Skipped
+// entirely under reduced motion — the styled static hero is the fallback.
+if (!reduceMotion) {
+  const fxCanvas = document.querySelector<HTMLCanvasElement>("#fx");
+  if (fxCanvas) {
+    try {
+      const fx = initFx(fxCanvas, {
+        heroNameEl: $("#heroName"),
+        heroEl: document.querySelector<HTMLElement>(".hero")!,
+        finePointer,
+      });
+      fx.setRoute(routeMode === "home");
+      window.addEventListener("hashchange", () => fx.setRoute(routeMode === "home"));
+    } catch (err) {
+      console.warn("fx disabled:", err);
+      fxCanvas.remove();
+    }
+  }
+}

@@ -221,6 +221,7 @@ export const projects: Project[] = [
     url: "https://github.com/sahiixx/sahiixx-agency",
     accent: "#22d3ee",
   },
+  // __OPA_PORTFOLIO_INSERT__
 ];
 
 export const skillGroups: SkillGroup[] = [

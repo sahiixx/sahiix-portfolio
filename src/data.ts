@@ -221,6 +221,32 @@ export const projects: Project[] = [
     url: "https://github.com/sahiixx/sahiixx-agency",
     accent: "#22d3ee",
   },
+  {
+    id: "relaymux",
+    index: "05",
+    name: "Relay Mux",
+    tagline: "Launch coding agents in tmux sessions from Telegram/iMessage",
+    description: "A remote control for coding agents, launching CLIs in tmux sessions.",
+    longDescription: [
+      "Relay mux is a Telegram/iMessage bot that launches coding agent CLIs in tmux sessions.",
+      "Agents can be controlled remotely using the Relay Mux bot.",
+    ],
+    problem: "Launch and control coding agents from anywhere, without leaving your terminal.",
+    architecture: "Telegram Bot · TMUX · TypeScript",
+    statusNote: "Runs on Telegram. Mature and stable.",
+    highlights: [
+      "Launches CLIs in tmux sessions using a single command",
+      "Controlled by Telegram/iMessage bots",
+      "Written in TypeScript for maximum reliability",
+      "Highly customizable through configuration files",
+    ],
+    role: "Architect & sole engineer",
+    status: "Shipped",
+    stack: ["TypeScript", "Telegram Bot API", "TMUX", "Node.js"],
+    year: "2026",
+    url: "https://github.com/mupt-ai/relaymux",
+    accent: "#34d399",
+  },
   // __OPA_PORTFOLIO_INSERT__
 ];
 

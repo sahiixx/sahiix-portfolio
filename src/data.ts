@@ -247,6 +247,31 @@ export const projects: Project[] = [
     url: "https://github.com/mupt-ai/relaymux",
     accent: "#34d399",
   },
+  {
+    id: "friday-os",
+    index: "06",
+    name: "Friday OS",
+    tagline: "Voice-first personal AI for offline and cloud use",
+    description: "A voice-powered, memory-persistent operating system for personal AI assistants.",
+    longDescription: [
+      "Built with LiveKit voice and Tauri desktop for a native experience.",
+      "Features Claude Code plugin for code editing and management.",
+    ],
+    problem: "Offline access to voice-controlled personal AI assistants is currently limited by connectivity issues.",
+    architecture: "LiveKit · Tauri · MCP-powered",
+    statusNote: "Runs offline on Ollama or cloud via Anthropic.",
+    highlights: [
+      "Supports voice control and memory persistence for a seamless experience.",
+      "Features a native desktop interface with code editing capabilities.",
+      "Designed to run offline, reducing dependence on internet connectivity.",
+    ],
+    role: "Architect & sole engineer",
+    status: "Shipped",
+    stack: ["Python", "LiveKit", "Tauri", "MCP"],
+    year: "2026",
+    url: "https://github.com/sahiixx/friday-os",
+    accent: "#f472b6",
+  },
   // __OPA_PORTFOLIO_INSERT__
 ];
 

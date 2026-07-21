@@ -26,8 +26,10 @@ interface Particle {
 }
 
 const HUES = [262, 192, 38, 150]; // violet, cyan, amber, green
-const MAX_NAME_PARTICLES = 3500;
-const DUST_COUNT = 220;
+// Device-scaled particle budgets (recomputed in resize() from viewport width
+// and CPU concurrency) to avoid melting low-end / mobile devices.
+let MAX_NAME_PARTICLES = 3500;
+let DUST_COUNT = 220;
 const SAMPLE_GAP = 4;
 const TRAIL_FILL = "rgba(3,4,10,0.20)";
 
@@ -141,6 +143,10 @@ export function initFx(canvas: HTMLCanvasElement, opts: FxOptions): { setRoute: 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = window.innerWidth;
     H = window.innerHeight;
+    const isMobile = W < 768;
+    const isLowEnd = (navigator.hardwareConcurrency || 8) <= 4;
+    MAX_NAME_PARTICLES = isMobile ? 800 : isLowEnd ? 1500 : 3500;
+    DUST_COUNT = isMobile ? 60 : isLowEnd ? 120 : 220;
     canvas.width = W * dpr;
     canvas.height = H * dpr;
     canvas.style.width = `${W}px`;

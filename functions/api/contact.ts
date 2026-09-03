@@ -36,7 +36,7 @@ export const onRequestPost: Handler = async ({ request, env }) => {
   try {
     payload = (await request.json()) as typeof payload;
   } catch {
-    return json(400, { ok: false, error: "Invalid JSON body." });
+    return json(400, { ok: false, error: "Invalid JSON body." }, cors);
   }
 
   const name = String(payload.name || "").trim().slice(0, 120);
@@ -44,10 +44,10 @@ export const onRequestPost: Handler = async ({ request, env }) => {
   const message = String(payload.message || "").trim().slice(0, 8000);
 
   if (!name || !email || !message) {
-    return json(422, { ok: false, error: "name, email, and message are required." });
+    return json(422, { ok: false, error: "name, email, and message are required." }, cors);
   }
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return json(422, { ok: false, error: "Invalid email address." });
+    return json(422, { ok: false, error: "Invalid email address." }, cors);
   }
 
   if (!env.RESEND_API_KEY) {

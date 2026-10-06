@@ -1,135 +1,95 @@
-# sahiix-portfolio
+# SAHIIX Portfolio
 
-![Node](https://img.shields.io/badge/node-20+-green) ![Agentic](https://img.shields.io/badge/agentic-harness-purple)
+Public portfolio for SAHIIX: AI-native operating systems, agent runtimes, voice tools and Dubai domain workflows.
 
-Live: **https://sahiix-portfolio.pages.dev**
+**Live:** https://sahiix-portfolio.pages.dev
 
-## Table of Contents
+## What this site represents
 
-- [Overview](#overview)
-- [Quick Start](#quick-start)
-- [Agentic Architecture](#agentic-architecture)
-- [Model Routing](#model-routing)
-- [Project Layout](#project-layout)
-- [Development](#development)
-- [Related Repositories](#related-repositories)
+The portfolio is deliberately evidence-led. It distinguishes:
 
-## Overview
+- **Live** — a reachable or documented running surface.
+- **Shipped** — code exists in a repository, without implying a hosted service.
+- **In development** — active implementation or roadmap work.
+- **Concept** — a future design direction.
 
-Live: **https://sahiix-portfolio.pages.dev**
+The site does not claim that SAHIIX has achieved AGI or ASI. AGI and ASI are presented as sourced research, safety and governance horizons. Product status comes from repository code, project documentation and public deployment links.
 
-| | |
-|---|---|
-| **Stack** | node |
-| **Frameworks** | — |
-| **Tests** | none detected |
-| **Commits** | 2 |
-| **Last activity** | 2026-08-10 |
-| **Visibility** | public |
+## Selected systems
 
-## Quick Start
-
-### Install
-
-```bash
-npm install
-```
-
-### Run
-
-```bash
-npm run dev
-```
-
-## Agentic Architecture
-
-This repository participates in the [sahiixx agentic harness](https://github.com/sahiixx/agentic-harness) — a shared
-contract for how agents plan, act, verify, and recover across all repos in this account.
-
-**Signal strength:** agentic density score `73` (references to agent,
-tool-call, LLM, RAG and orchestration primitives across the source tree).
-
-### Patterns in play
-
-| Pattern | Role here |
-|---|---|
-| **Prompt Chaining** | Deterministic multi-step pipelines where subtasks are known upfront |
-| **Routing** | Classify input, dispatch to the specialist path (cheap model for easy work) |
-| **Parallelization** | Independent subtasks fan out; results aggregated programmatically |
-| **Orchestrator–Workers** | Central planner decomposes dynamically when subtasks can't be predicted |
-| **Evaluator–Optimizer** | Generator/judge split with explicit rubric; bounded retry |
-| **ReAct** | Interleaved reason → act → observe for adaptive tool use |
-| **Reflection** | Self-critique before emitting a final answer |
-
-> Escalation rule: start with the simplest pattern that solves the problem. Add
-> Reflection only when verification fails, Planning only when dependencies emerge,
-> Multi-Agent only when work exceeds a single role or context window.
-
-### Reliability envelope
-
-- **Bounded execution** — every loop has a max-iteration and wall-clock ceiling.
-- **Tool sandboxing** — filesystem/network side effects are isolated and reversible.
-- **Guardrail layering** — validate at input, mid-loop, and output.
-- **Context engineering** — select, compress, isolate; never let raw history grow unbounded.
-- **Self-verification** — check intermediate output against constraints before continuing.
-
-## Model Routing
-
-Agent work in this repo routes through Azure AI Foundry. See [`AGENTS.md`](./AGENTS.md)
-for the full contract.
-
-| Purpose | Deployment | Endpoint |
+| System | Evidence | State |
 |---|---|---|
-| Default / general | `gpt-5.6-sol` | `/openai/v1/chat/completions` |
-| Deep reasoning | `claude-opus-5` | `/openai/v1/responses` **only** |
-| Embeddings | `text-embedding-3-small` | `/openai/v1/embeddings` |
+| [SAHIIX OS](https://sahiixx-os.pages.dev) | React 19 + Hono + tRPC + Drizzle/Neon on Cloudflare | Public surface |
+| [Jarvis](https://sahiixx-os.pages.dev/jarvis) | Streaming voice interface with read/mutate/confirmation tool tiers | Public route |
+| NEXUS | Local SQLite/Node deal workflow with WhatsApp and OS import path | Local/pilot |
+| [One Person Agency](https://github.com/sahiixx/sahiixx-agency) | CLI/API/MCP repository and task dispatcher | Shipped/local |
+| [Friday OS](https://github.com/sahiixx/friday-os) | Voice-first, memory-persistent personal AI OS | Shipped |
 
-```bash
-export AZURE_FOUNDRY_API_KEY=...        # never commit this
-export AZURE_FOUNDRY_BASE_URL=https://<resource>.openai.azure.com/openai/v1
-```
+## AI horizon sources
 
-> **Gotcha:** Claude deployments on Azure return `404 api_not_supported` on
-> `/chat/completions`. They answer **only** via the Responses API.
+The site's **AI horizon** section was refreshed on **2026-10-06** from primary sources:
 
-## Project Layout
+- [OpenAI Research](https://openai.com/research/) — current frontier research and model announcements.
+- [OpenAI Charter](https://openai.com/charter/) — an explicit AGI definition and mission framing.
+- [Anthropic: Introducing Claude 4](https://www.anthropic.com/news/claude-4) — reasoning, tool use, memory and agent capabilities.
+- [Google DeepMind models](https://deepmind.google/models/) — Gemini, multimodal, robotics and specialized model surfaces.
+- [Qwen3](https://qwenlm.github.io/blog/qwen3/) — open-weight models, hybrid thinking modes and agent/MCP use.
+- [Google DeepMind Frontier Safety](https://deepmind.google/frontier-safety/) — frontier capability and safety context.
 
-```
-AGENTS.md
-DECK-OUTLINE.md
-E2E-WIRING-PACK.md
-FUNDING-NARRATIVE.md
-INVESTOR-OUTREACH.md
-README.md
-docs/
-functions/
-index.html
-package-lock.json
-package.json
-public/
-src/
-tsconfig.json
-```
+The implementation keeps provider capability claims separate from SAHIIX deployment claims. Model names and benchmark numbers should be refreshed from their primary sources before being treated as current.
 
 ## Development
 
-```bash
-# lint / format before committing
-npm run lint
+### Requirements
 
-# run the CI check locally
-gh workflow run hermes-azure-check.yml
+- Node.js 20+
+- npm
+
+### Install and run
+
+```bash
+npm install
+npm run dev
 ```
 
-Secrets live in environment variables and CI secrets — never in tracked files.
+### Verification
 
-## Related Repositories
+```bash
+npm run check
+npm run build
+```
 
-Part of a 84-repository workspace sharing one agentic contract:
+### Deploy
 
-- **[agentic-harness](https://github.com/sahiixx/agentic-harness)** — patterns, contracts, and reference implementations
-- `AGENTS.md` in every repo pins identical model routing
+```bash
+npm run deploy
+```
+
+Deployment uses Cloudflare Pages through Wrangler. Credentials belong in the environment; never commit secrets.
+
+## Project layout
+
+```text
+AGENTS.md                 repository-specific operating rules
+index.html                metadata, navigation and page sections
+src/data.ts               identity, projects, systems and source map
+src/main.ts               rendering, routing and interactions
+src/style.css             visual system and responsive layout
+src/particles.ts          motion-gated canvas effects
+functions/api/contact.ts  Cloudflare Pages contact endpoint
+```
+
+## Related repositories
+
+- [sahiixx profile](https://github.com/sahiixx/sahiixx) — repository-backed profile and systems map.
+- [agentic-harness](https://github.com/sahiixx/agentic-harness) — bounded agent workflow patterns and verification.
+- [sahiixx-agency](https://github.com/sahiixx/sahiixx-agency) — repository/task dispatch surface.
+- [sahiixx-os](https://github.com/sahiixx/sahiixx-os) — public operator shell.
+
+## Model routing
+
+Agent-work routing conventions are documented in [`AGENTS.md`](./AGENTS.md). The file describes Azure AI Foundry deployment names used by the repository workflow; it is not a claim that every model listed there is a public portfolio product.
 
 ---
 
-<sub>README maintained by the agentic harness · last regenerated 2026-08-10</sub>
+<sub>Content and status labels reviewed 2026-10-06 · SAHIIX</sub>

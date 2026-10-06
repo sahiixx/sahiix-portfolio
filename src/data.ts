@@ -44,18 +44,18 @@ export const identity = {
   brand: "SAHIIX",
   name: "SAHIIX",
   rotator: [
-    "Dubai deal engines that close the loop.",
-    "AI-native operating systems.",
-    "real-time voice agents.",
-    "systems that control the machine.",
+    "AI systems that ship.",
+    "agent runtimes + persistent memory.",
+    "voice + edge control with gates.",
+    "AGI research without hype.",
   ],
   tagline:
-    "Dubai-based builder of AI-native OS shells, live real-estate pipelines, and voice agents that actually run the stack — not slideware.",
+    "Dubai-based builder of AI-native OS shells, agent runtimes and domain workflows — with model claims separated from what is actually shipped.",
   location: "Dubai, UAE",
   availability: "Open for 60-day pilots · select work",
   bio: [
-    "I design and ship end-to-end systems: a live NEXUS real-estate deal engine with WhatsApp, a modular SAHIIX OS on Neon + Cloudflare, and Jarvis — a voice agent with tiered OS control.",
-    "Focus: the seam between LLMs and production infrastructure — streaming voice, tool-calling, safety gates, and commercial deal flow in Dubai (RERA-aware).",
+    "I design and ship end-to-end systems: NEXUS for Dubai real-estate workflows, SAHIIX OS on Neon + Cloudflare, and Jarvis — a voice interface with tiered OS control.",
+    "Focus: the seam between models and production infrastructure — routing, tool-calling, persistent state, streaming voice, observability and human approval gates.",
   ],
   email: "sahiixofficial@gmail.com",
   phone: "+971 58 547 6077",
@@ -102,11 +102,11 @@ export const projects: Project[] = [
     id: "nexus",
     index: "01",
     name: "NEXUS",
-    tagline: "Live Dubai off-market deal engine + WhatsApp.",
+    tagline: "Local/pilot Dubai deal engine + WhatsApp loop.",
     description:
-      "Production pipeline on WSL: SQLite + Node, Palm owners, goldmine tiers, WhatsApp bridge. Bridged into SAHIIX OS for live lead import. Built for brokerage velocity under RERA-aware messaging.",
+      "WSL pipeline: SQLite + Node, Palm owners, goldmine tiers and a WhatsApp bridge. It can bridge into SAHIIX OS for lead import; public copy keeps the workstation/pilot boundary visible.",
     longDescription: [
-      "NEXUS is the commercial spine: a live deal engine, not a mock CRM. Source of truth is SQLite behind a Node API on WSL (ports 3001/3002), with WhatsApp closing the loop to prospects.",
+      "NEXUS is the commercial spine: a working local deal engine, not a mock CRM. Its source of truth is SQLite behind a Node API on WSL (ports 3001/3002), with WhatsApp closing the loop to prospects.",
       "Goldmine tiers and Palm priority lists rank who to call; templates stay RERA-aware. The modular OS NEXUS page can pull live estate leads over a Cloudflare tunnel and import them as Neon deals (ESTATE-*).",
     ],
     problem:
@@ -122,7 +122,7 @@ export const projects: Project[] = [
       "Import path: live lead → Neon deal (ESTATE-*) inside SAHIIX OS.",
     ],
     role: "Architect & sole engineer",
-    status: "Live · pilot-ready",
+    status: "Local · pilot-ready",
     stack: ["Node", "SQLite", "WhatsApp", "WSL", "Cloudflare Tunnel"],
     year: "2025–26",
     url: "https://sahiixx-os.pages.dev/nexus",
@@ -148,7 +148,7 @@ export const projects: Project[] = [
       "Cloudflare Pages `_worker.js` · Hono + tRPC 11 · Drizzle/Neon · Hyperdrive optional · Workers AI binding · Ollama Cloud for Jarvis · responsive OS chrome.",
     statusNote: "Live at https://sahiixx-os.pages.dev — v4.3.0, Neon live, production smoke green.",
     highlights: [
-      "Live: sahiixx-os.pages.dev — JWT admin, Workers AI probe, Ollama Cloud glm-5.2.",
+      "Live: sahiixx-os.pages.dev — JWT admin, Workers AI probe and provider-backed assistant route.",
       "9 modules + live Hub counts from Neon.",
       "Audit trail, Prometheus metrics, CI / smoke-prod.",
       "Responsive shell: mobile drawer, LIVE/DEMO/ESTATE chips.",
@@ -172,7 +172,7 @@ export const projects: Project[] = [
       "SSE voice agent: speaks as it thinks, tiered OS tools (read / mutate / CONFIRM), optional SAPI keyless TTS. Hosted at /jarvis on the live OS with Ollama Cloud.",
     longDescription: [
       "Jarvis multiplexes token stream and TTS so voice leads text. Safety is three-tier OS control so a model can operate without free-form shell disaster.",
-      "Embedded in SAHIIX OS; provider stack prefers Ollama Cloud (glm-5.2) with local fallback.",
+      "Embedded in SAHIIX OS; provider selection remains an implementation detail with a local fallback path.",
     ],
     problem:
       "Chatbots don't move a Windows/WSL box. Voice demos die without keys. Ungated shell tools are a liability.",
@@ -182,7 +182,7 @@ export const projects: Project[] = [
     highlights: [
       "Keyless warm SAPI TTS path; optional ElevenLabs.",
       "Read / mutate / destructive-CONFIRM tool tiers.",
-      "Live edge path: Ollama Cloud glm-5.2.",
+      "Live edge path with provider fallback and explicit OS-control gates.",
     ],
     role: "Architect & sole engineer",
     status: "Live + extended",
@@ -198,14 +198,14 @@ export const projects: Project[] = [
     id: "opa",
     index: "04",
     name: "One Person Agency",
-    tagline: "170+ repos, one routing layer.",
+    tagline: "A large repo estate, one routing layer.",
     description:
       "Python package (FastAPI + MCP + Typer `opa`) that discovers repos, scores capabilities, and dispatches tasks — agency behavior for one operator.",
     longDescription: [
       "OPA turns a pile of specialized repos into a fleet: discover, register, route, execute. CLI + API + MCP so agents and humans share the same dispatcher.",
     ],
     problem:
-      "Context-switching across 170+ repos kills throughput; no single intent→tool path.",
+      "Context-switching across a large repository estate kills throughput; no single intent→tool path.",
     architecture:
       "Python package · registry JSON · FastAPI · MCP server · Typer CLI · adapter layers for career/security/video modules.",
     statusNote: "Shipped package; local uvicorn agency API used alongside the OS stack.",
@@ -285,16 +285,55 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     label: "AI",
-    items: ["Ollama Cloud", "Kimi", "Tool-calling", "TTS / STT", "MCP"],
+    items: ["Model routing", "Tool-calling", "MCP", "TTS / STT", "Agent evaluation"],
   },
   { label: "Systems", items: ["WSL2", "systemd-user", "cloudflared", "WhatsApp bots"] },
 ];
 
 export const stats = [
-  { value: "Live", label: "NEXUS pipeline" },
+  { value: "223", label: "public repos" },
+  { value: "51", label: "unarchived originals" },
   { value: "v4.3", label: "OS on Cloudflare" },
-  { value: "9", label: "OS modules" },
   { value: "60d", label: "pilot window" },
+];
+
+export interface FrontierEntry {
+  label: string;
+  title: string;
+  copy: string;
+  href: string;
+  accent: string;
+}
+
+export const frontierEntries: FrontierEntry[] = [
+  {
+    label: "FRONTIER MODELS",
+    title: "Capability is moving into the system layer.",
+    copy: "OpenAI, Anthropic and Google DeepMind are shipping stronger reasoning, coding, tool-use, multimodal and agent surfaces. The durable engineering work is routing, permissions, state and verification around them.",
+    href: "https://openai.com/research/",
+    accent: "#22d3ee",
+  },
+  {
+    label: "OPEN + LOCAL",
+    title: "Open weights keep the stack composable.",
+    copy: "Qwen3 documents thinking and non-thinking modes, open-weight releases and MCP-oriented agent use. Local inference remains a practical path for privacy, cost and fallback behavior.",
+    href: "https://qwenlm.github.io/blog/qwen3/",
+    accent: "#34d399",
+  },
+  {
+    label: "AGI",
+    title: "A research target, not a product badge.",
+    copy: "AGI has competing definitions. OpenAI’s Charter describes highly autonomous systems outperforming humans at most economically valuable work; this portfolio makes no AGI achievement claim.",
+    href: "https://openai.com/charter/",
+    accent: "#f59e0b",
+  },
+  {
+    label: "ASI",
+    title: "A future safety and governance horizon.",
+    copy: "Superintelligence is not represented as deployed here. The design response is bounded autonomy, approval gates, observability and source-linked claims that can be checked later.",
+    href: "https://deepmind.google/frontier-safety/",
+    accent: "#8b5cff",
+  },
 ];
 
 /**
@@ -319,7 +358,7 @@ export const systems: System[] = [
     layer: "Kernel",
     status: "shipped",
     note:
-      "Multi-agent dispatcher: discovers repos, scores capability, routes intent→task across 100+ repos via CLI/REST/MCP. 461 tests green; discovery adapter built this session.",
+      "Multi-agent dispatcher: discovers repositories, scores capability and routes intent→task via CLI/REST/MCP. Shipped package; local execution and adapter coverage vary by environment.",
     stack: ["Python", "FastAPI", "MCP", "Typer"],
     url: "https://github.com/sahiixx/sahiixx-agency",
   },
@@ -349,7 +388,7 @@ export const systems: System[] = [
     layer: "Voice",
     status: "live",
     note:
-      "SSE voice agent with tiered OS control (read/mutate/CONFIRM). Embedded in SAHIIX OS; Ollama Cloud glm-5.2.",
+      "SSE voice agent with tiered OS control (read/mutate/CONFIRM). Embedded in SAHIIX OS; provider details remain deployment-specific.",
     stack: ["SSE", "Ollama Cloud", "PowerShell", ".NET", "WSL"],
     url: "https://sahiixx-os.pages.dev/jarvis",
   },
@@ -376,8 +415,8 @@ export const systems: System[] = [
     id: "friday",
     name: "Friday OS / Termux",
     layer: "Edge",
-    status: "in-dev",
-    note: "Voice + edge + on-device agents; Android/Termux pipelines.",
+    status: "shipped",
+    note: "Voice + edge + on-device agent experiments; repository shipped, integrations vary by environment.",
     stack: ["Termux", "on-device"],
     url: "",
   },

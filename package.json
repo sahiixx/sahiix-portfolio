@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Personal portfolio of SAHIIX — AI-native operating systems & real-time voice agents.",
+  "description": "Personal portfolio of SAHIIX — AI systems, agent runtimes, voice tools and domain workflows.",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

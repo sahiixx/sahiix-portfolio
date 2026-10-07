@@ -8,6 +8,7 @@ import {
   stats,
   pilots,
   systems,
+  frontierEntries,
   type Project,
 } from "./data";
 
@@ -104,6 +105,23 @@ function projectCard(p: Project): HTMLElement {
   return card;
 }
 $("#projectGrid").append(...projects.map(projectCard));
+
+// ── Render: AI frontier / AGI / ASI grounding ─────────────────────────────────
+const frontierGrid = $("#frontierGrid");
+frontierGrid.append(
+  ...frontierEntries.map((entry) => {
+    const card = document.createElement("article");
+    card.className = "frontier-card reveal";
+    card.style.setProperty("--accent", entry.accent);
+    card.innerHTML = `
+      <p class="frontier-label">${entry.label}</p>
+      <h3 class="frontier-title">${entry.title}</h3>
+      <p class="frontier-copy">${entry.copy}</p>
+      <a class="frontier-link" href="${entry.href}" target="_blank" rel="noopener">Read primary source <span class="project-arrow">↗</span></a>
+    `;
+    return card;
+  }),
+);
 
 // ── Pilots + looking-for ─────────────────────────────────────────────────────
 const pilotGrid = $("#pilotGrid");
@@ -380,7 +398,7 @@ setTimeout(() => {
 // ── Scroll progress + nav state ───────────────────────────────────────────────
 const progress = $("#scrollProgress");
 const nav = $("#nav");
-const sections = ["work", "pilots", "about", "skills", "systems", "contact"].map(
+const sections = ["work", "pilots", "about", "frontier", "skills", "systems", "contact"].map(
   (id) => document.getElementById(id)!,
 );
 const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("#navLinks a"));

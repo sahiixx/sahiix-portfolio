@@ -54,7 +54,7 @@ export const identity = {
   location: "Dubai, UAE",
   availability: "Open for 60-day pilots · select work",
   bio: [
-    "I design and ship end-to-end systems: NEXUS for Dubai real-estate workflows, SAHIIX OS on Neon + Cloudflare, and Jarvis — a voice interface with tiered OS control.",
+    "I build systems for business workflows and AI experimentation: the private SAHIIXX NEXUS workspace, SAHIIX OS and Jarvis, plus the Weight-Space Research Lab and experimental Trust Core SDK.",
     "Focus: the seam between models and production infrastructure — routing, tool-calling, persistent state, streaming voice, observability and human approval gates.",
   ],
   email: "sahiixofficial@gmail.com",
@@ -99,38 +99,39 @@ export const identity = {
 /** NEXUS first — commercial lead. Swiss-Army + LLM-Council dropped from public catalog. */
 export const projects: Project[] = [
   {
-    id: "nexus",
-    index: "01",
-    name: "NEXUS",
-    tagline: "Local/pilot Dubai deal engine + WhatsApp loop.",
-    description:
-      "WSL pipeline: SQLite + Node, Palm owners, goldmine tiers and a WhatsApp bridge. It can bridge into SAHIIX OS for lead import; public copy keeps the workstation/pilot boundary visible.",
-    longDescription: [
-      "NEXUS is the commercial spine: a working local deal engine, not a mock CRM. Its source of truth is SQLite behind a Node API on WSL (ports 3001/3002), with WhatsApp closing the loop to prospects.",
-      "Goldmine tiers and Palm priority lists rank who to call; templates stay RERA-aware. The modular OS NEXUS page can pull live estate leads over a Cloudflare tunnel and import them as Neon deals (ESTATE-*).",
+    "id": "nexus",
+    "index": "01",
+    "name": "SAHIIXX NEXUS",
+    "tagline": "A private workspace for CRM, workbook insights and reviewed memory.",
+    "description": "A protected development preview bringing CRM, workbook dashboards and a review-based Memory Vault into one owner workspace.",
+    "longDescription": [
+        "The current NEXUS preview brings owner login, CRM records, workbook-derived dashboards and a Memory Vault together on Vercel and an isolated Neon development database.",
+        "Workbook data has been reconciled with the development database. Memories remain pending review; signed-in mobile rendering and end-to-end access checks remain in progress."
     ],
-    problem:
-      "Brokerages drown in unstructured inventory and chat — no ranked queue, no compliance-aware templates, no path from lead → owner → WhatsApp without five tabs and a spreadsheet.",
-    architecture:
-      "WSL Node API + SQLite (estate.db) · WhatsApp bot service · goldmine / Palm ranking · optional cloudflared expose · SAHIIX OS NEXUS module imports leads into Neon for the unified OS shell.",
-    statusNote:
-      "Live on this workstation (systemd-user estate-api + whatsapp). OS bridge at sahiixx-os.pages.dev/nexus when tunnel is up.",
-    highlights: [
-      "Live API on :3001 / WhatsApp on :3002 under systemd-user.",
-      "Goldmine tiers + Palm high-priority owners — chase order, not raw dumps.",
-      "RERA-aware framing for off-market / DLD-scale contact work.",
-      "Import path: live lead → Neon deal (ESTATE-*) inside SAHIIX OS.",
+    "problem": "Business records, operating plans and working memory are spread across separate files and tools.",
+    "architecture": "Vercel preview · Better Auth owner login · isolated Neon Postgres development branch · workbook snapshot · review-based Memory Vault.",
+    "statusNote": "Private development preview. Data reconciliation completed; browser acceptance remains pending. Outreach and automation are not activated.",
+    "highlights": [
+        "Owner login and closed enrollment.",
+        "CRM and workbook snapshot reconciliation.",
+        "Memory entries retain provenance and review state.",
+        "Development data isolated from the main database."
     ],
-    role: "Architect & sole engineer",
-    status: "Local · pilot-ready",
-    stack: ["Node", "SQLite", "WhatsApp", "WSL", "Cloudflare Tunnel"],
-    year: "2025–26",
-    url: "https://sahiixx-os.pages.dev/nexus",
-    accent: "#f59e0b",
-    featured: true,
-    badge: "LEAD PRODUCT",
-    image: "./screenshots/nexus.jpg",
-  },
+    "role": "Builder & integrator",
+    "status": "Private preview",
+    "stack": [
+        "Vercel",
+        "Neon Postgres",
+        "Better Auth",
+        "CRM",
+        "Memory Vault"
+    ],
+    "year": "2026",
+    "url": "",
+    "accent": "#f59e0b",
+    "featured": true,
+    "badge": "LATEST WORK"
+},
   {
     id: "sahiix-os",
     index: "02",
@@ -272,6 +273,69 @@ export const projects: Project[] = [
     url: "https://github.com/sahiixx/friday-os",
     accent: "#f472b6",
   },
+  {
+    "id": "weightspace",
+    "index": "07",
+    "name": "Weight-Space Research Lab",
+    "tagline": "Small, inspectable experiments in neural-weight editing.",
+    "description": "CPU-friendly PyTorch experiments with bounded edits, independent holdout scoring, exact-diff verification and reproducible reports.",
+    "longDescription": [
+        "The bundled educational experiment repairs an intentionally corrupted scalar in a tiny classifier using bounded search without gradients.",
+        "Separate Qwen tooling covers checkpoint reconstruction and a short CPU generation smoke run. The smoke output is not a full MATH-500 benchmark or evidence of general model improvement."
+    ],
+    "problem": "Model-editing claims need reproducible experiments and clear boundaries between toy demonstrations and model-scale evidence.",
+    "architecture": "Python CLI · PyTorch CPU · validation gates · holdout scoring · exact tensor comparisons · Docker and GitHub Actions tooling.",
+    "statusNote": "Public research code. Real-model CPU smoke evidence is documented separately from the educational experiment and GPU benchmarks.",
+    "highlights": [
+        "Bounded proposals and exact-edit verification.",
+        "Independent test and audit splits.",
+        "Public CPU smoke evidence and reproduction guide."
+    ],
+    "role": "Lab implementation & verification tooling",
+    "status": "Research code",
+    "stack": [
+        "Python",
+        "PyTorch",
+        "CPU",
+        "GitHub Actions"
+    ],
+    "year": "2026",
+    "url": "https://github.com/sahiixx/weightspace-research-lab",
+    "accent": "#34d399",
+    "featured": true,
+    "badge": "RESEARCH"
+},
+  {
+    "id": "trust-core",
+    "index": "08",
+    "name": "SAHIIXX Trust Core",
+    "tagline": "Explicit approval records for agent-assisted workflows.",
+    "description": "An experimental Python SDK for canonical JSON hashing, Ed25519 approval envelopes, allowlisted policies and local event chains.",
+    "longDescription": [
+        "Trust Core is a standalone package with a cryptography dependency and no PyTorch requirement. It separates artifact proposals from operator-controlled signing and verification.",
+        "Local event chains are integrity aids, not immutable audit storage. Production use needs independent key custody, revocation and deployment-time verification."
+    ],
+    "problem": "Agent proposals need a clear approval boundary and verifiable records before execution.",
+    "architecture": "Python · cryptography · domain-separated Ed25519 signatures · allowlisted verification policy · local hash-chained events.",
+    "statusNote": "Experimental SDK; no production security certification or regulatory compliance claim.",
+    "highlights": [
+        "Standalone package without PyTorch.",
+        "Signed configuration and workflow payloads.",
+        "Documented key-custody and trust boundaries."
+    ],
+    "role": "SDK implementation",
+    "status": "Experimental",
+    "stack": [
+        "Python",
+        "Ed25519",
+        "cryptography",
+        "JSON"
+    ],
+    "year": "2026",
+    "url": "https://github.com/sahiixx/weightspace-research-lab/tree/main/packages/sahiixx_trust_core",
+    "accent": "#22d3ee",
+    "badge": "SDK"
+},
   // __OPA_PORTFOLIO_INSERT__
 ];
 
@@ -373,14 +437,9 @@ export const systems: System[] = [
     url: "https://sahiixx-os.pages.dev",
   },
   {
-    id: "nexus",
-    name: "NEXUS",
-    layer: "OS",
-    status: "live",
-    note:
-      "Dubai off-market deal engine + WhatsApp. SQLite + Node on WSL, goldmine/Palm ranking, RERA-aware. Lead→CRM loop closed.",
-    stack: ["Node", "SQLite", "WhatsApp", "WSL", "Cloudflare Tunnel"],
-    url: "https://sahiixx-os.pages.dev/nexus",
+    id: "nexus", name: "SAHIIXX NEXUS", layer: "Workspace", status: "in-dev",
+    note: "Private CRM, workbook dashboard and reviewed memory preview. Data reconciled in development; browser acceptance pending. Outreach and automation are disabled.",
+    stack: ["Vercel", "Neon", "Better Auth"], url: "",
   },
   {
     id: "jarvis",

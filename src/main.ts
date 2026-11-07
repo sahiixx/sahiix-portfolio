@@ -195,7 +195,7 @@ function renderDetail(p: Project) {
   const paragraphs = p.longDescription.map((t) => `<p class="detail-p">${t}</p>`).join("");
   const highlights = p.highlights.map((h) => `<li class="detail-highlight">${h}</li>`).join("");
   const linkBlock = p.url
-    ? `<a class="btn btn-primary" href="${p.url}" target="_blank" rel="noopener">Open live system <span class="project-arrow">↗</span></a>`
+    ? `<a class="btn btn-primary" href="${p.url}" target="_blank" rel="noopener">Open project resource <span class="project-arrow">↗</span></a>`
     : `<span class="btn btn-ghost btn-disabled">Link coming soon</span>`;
   const heroImg = p.image
     ? `<div class="detail-hero"><img src="${p.image}" alt="${p.name} interface" width="1200" height="675" /></div>`
@@ -398,7 +398,7 @@ setTimeout(() => {
 // ── Scroll progress + nav state ───────────────────────────────────────────────
 const progress = $("#scrollProgress");
 const nav = $("#nav");
-const sections = ["work", "pilots", "about", "frontier", "skills", "systems", "contact"].map(
+const sections = ["work", "resources", "pilots", "about", "frontier", "skills", "systems", "contact"].map(
   (id) => document.getElementById(id)!,
 );
 const navLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>("#navLinks a"));

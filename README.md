@@ -21,7 +21,7 @@ The site does not claim that SAHIIX has achieved AGI or ASI. AGI and ASI are pre
 |---|---|---|
 | [SAHIIX OS](https://sahiixx-os.pages.dev) | React 19 + Hono + tRPC + Drizzle/Neon on Cloudflare | Public surface |
 | [Jarvis](https://sahiixx-os.pages.dev/jarvis) | Streaming voice interface with read/mutate/confirmation tool tiers | Public route |
-| NEXUS | Local SQLite/Node deal workflow with WhatsApp and OS import path | Local/pilot |
+| SAHIIXX NEXUS | Protected Vercel + Neon CRM, workbook and reviewed-memory workspace | Private development preview |
 | [One Person Agency](https://github.com/sahiixx/sahiixx-agency) | CLI/API/MCP repository and task dispatcher | Shipped/local |
 | [Friday OS](https://github.com/sahiixx/friday-os) | Voice-first, memory-persistent personal AI OS | Shipped |
 
@@ -93,3 +93,7 @@ Agent-work routing conventions are documented in [`AGENTS.md`](./AGENTS.md). The
 ---
 
 <sub>Content and status labels reviewed 2026-10-06 · SAHIIX</sub>
+
+## November 2026 resource update
+
+Added Weight-Space Research Lab, experimental Trust Core SDK, CPU smoke evidence and reproduction links. NEXUS now describes the private development preview; no private data or preview credentials are published. CPU smoke results are not represented as benchmark improvements.

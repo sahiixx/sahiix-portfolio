@@ -1,146 +1,84 @@
-# SAHIIX — E2E Lead Machine: Wiring Pack (honest, mapped to real systems)
+# SAHIIX lead machine — verified wiring
 
-> Companion to the agent-spec pack you provided. That pack is a **target architecture
-> (design)**. This file maps it to what is **actually running** and gives the
-> one tactical next step: a paste-ready QualificationAgent schema for OPA's
-> real adapter pattern. Nothing here is invented as "live" that isn't.
+Updated 2026-11-21 from local code, synthetic tests, and the recovery-audit harness. This supersedes the previous design-only gap analysis.
 
-## 0) Reality map — spec vs. what exists (verified this session)
+## Implemented path
 
-| Spec component | Real status | Where it lives |
-|---------------|-------------|----------------|
-| Sovereign Supervisor (top router) | **Partial** — OPA `AgencyEngine` + `TaskRouter` is the real dispatcher (config/regex + keyword routing). No chat "Supervisor" persona exists. | `sahiixx_agency/core/engine.py`, `router.py` |
-| Event fabric (LeadCreated…) | **Foundation exists** — `core/bus.py` MessageBus (pub/sub, wildcards). No lead-specific event schemas yet. | `sahiixx_agency/core/bus.py` |
-| LeadCaptureAgent | **Does not exist** (no code). NEXUS claims WhatsApp intake but that's a separate WSL/Node service, not an OPA agent. | — |
-| QualificationAgent | **Does not exist** (no code). | — |
-| GeoMatchAgent | **Does not exist.** `adapters/realestate/` folder exists (foundation). | `sahiixx_agency/adapters/realestate/` |
-| SchedulingAgent | **Does not exist.** | — |
-| ReportingAgent | **Partial** — OPA metrics + `/metrics` Prometheus + dashboard Metrics page. No lead-funnel report yet. | `core/metrics.py`, dashboard |
-| SAHIIX OS shell | **Live** (React/Hono/tRPC/Neon, Cloudflare). | sahiixx-os.pages.dev |
-| NEXUS | **Live** (WhatsApp lead→CRM claim). | sahiixx-os.pages.dev/nexus |
-| Jarvis voice | **Live** (SSE voice agent). | sahiixx-os.pages.dev/jarvis |
-| Sovereign Swarm | **In-dev** (portfolio says so; no code seen). | — |
-| Global Deal Floor | **Roadmap only.** | — |
+```text
+Synthetic/API intake
+  -> LeadCaptureAgent (normalizes identity, source and reference)
+  -> QualificationAgent (intent, budget, timeline, confidence)
+  -> qualified only: GeoMatchAgent (curated offline area suggestions)
+  -> scheduling handoff label; no booking performed
 
-**Bottom line:** the *infrastructure* (OPA dispatch + bus + realestate adapter folder + live OS/NEXUS/Jarvis) is real. The *5 specialist agents* are not — they are the build work. Treat the spec pack as the plan; this is the gap analysis.
-
-## 1) Where the Supervisor actually lives
-
-OPA already routes intent→module via `config/agency.yaml` `routing_rules` + adapter map
-(`_SPECIALIZED_ADAPTERS`). A new "lead machine" intent should be a
-**routing rule + a `realestate` adapter**, not a chat persona. Example rule to add:
-
-```yaml
-routing_rules:
-  - pattern: "(qualify|score|match|schedule|capture).*(lead|enquiry|prospect)"
-    target: "lead_machine"
-    priority: 90
+Nurture/dropped leads -> matched: null; no matching invocation
 ```
 
-And register an adapter factory (mirrors the discovery one I built):
-```python
-_SPECIALIZED_ADAPTERS["lead_machine"] = _make_lead_machine
+OPA implementation: `../sahiixx-agency/sahiixx_agency/`.
+
+| Component | Verified state | Source |
+|---|---|---|
+| Capture | Implemented and tested; emits a `lead.created` field | `adapters/lead_capture_agent.py` |
+| Qualification | Implemented and tested; supports M/mn/million; complete-duration timeline parsing | `adapters/qualification_agent.py` |
+| GeoMatch | Implemented and tested against a curated static area catalogue | `adapters/geomatch_agent.py` |
+| HTTP pipeline | Capture -> qualify -> qualified-only matching | `api/lead_machine.py` |
+| Dispatch registration | Capture and matching registered in the core engine for CLI/API/MCP consumers | `core/engine.py`, `core/specialized_lead_adapters.py` |
+| Message bus | Generic pub/sub exists; these HTTP steps call adapters directly | `core/bus.py` |
+| Scheduling | Matching returns a routing label; an automatic booking workflow is not verified | `adapters/geomatch_agent.py` |
+| Reporting | General metrics exist; a lead-funnel report is not verified | `core/metrics.py` |
+
+Returning an `event` or `next` field does not publish to the bus or execute the next step.
+
+## HTTP interface
+
+Start with `opa serve --host 127.0.0.1` or:
+
+```bash
+uvicorn sahiixx_agency.api.asgi:app --host 127.0.0.1 --port 8082
 ```
 
-## 2) Event fabric — reuse the real bus
+POST JSON to `/opa/lead/capture`, `/opa/lead/qualify`, `/opa/lead/match`, or `/opa/lead/pipeline`.
+The `/api/opa/lead/*` aliases also work. Blank/whitespace messages return 422.
+The API-key gate applies when `OPA_API_KEY` is configured.
 
-`MessageBus` already supports topic pub/sub. Define lead events as plain dicts on
-topics `lead.created`, `lead.qualified`, `lead.matched`, `lead.scheduled`.
-No new infra needed — just event *schemas* + subscribers.
+Example synthetic input:
 
-## 3) TACTICAL NEXT STEP — QualificationAgent input/output schema
-
-Paste-ready contract, built to drop into an OPA adapter's `execute(payload)`,
-matching the `DiscoveryAdapter.execute` signature pattern (verified:
-`async def execute(self, payload: dict) -> dict`).
-
-**Input payload (LeadCreated from LeadCaptureAgent):**
 ```json
 {
-  "lead_id": "lead_8f3a",
-  "contact": { "name": "A. Rahman", "handle": "+9715xxxx", "channel": "whatsapp" },
-  "message": "Looking for a 2BR in Marina, budget 1.2M, moving in 3 months",
+  "message": "I want to buy in Palm Jumeirah, budget AED 5mn, in 2 months",
   "source": "nexus_whatsapp",
-  "captured_at": "2026-07-16T09:12:00Z",
-  "raw_ref": "nexus:ESTATE-4471"
+  "raw_ref": "fixture_message"
 }
 ```
 
-**Output payload (LeadQualified — what QualificationAgent returns):**
-```json
-{
-  "lead_id": "lead_8f3a",
-  "score": 78,
-  "segment": "end_user_buyer",
-  "intent": "buy",
-  "timeline": "soon_0_3m",
-  "budget_band": "1.0M_1.5M",
-  "decision": "qualified_pipeline_entry",
-  "confidence": "medium",
-  "rationale": [
-    "Explicit budget + area + timeline → high intent",
-    "Marina 2BR at 1.2M is in-market; moderate confidence on exact fit"
-  ],
-  "tags": ["segment:buyer", "priority:high", "area:marina"],
-  "status": "qualified",
-  "next": "route_to_geomatch"
-}
-```
+The source label does not connect this endpoint to WhatsApp. Real inbound delivery needs an independently verified integration.
 
-**Adapter skeleton (real OPA pattern — `sahiixx_agency/adapters/qualification_agent.py`):**
-```python
-from __future__ import annotations
-import re
-from sahiixx_agency.adapters.base import BaseAdapter
+## NEXUS and public OS
 
-class QualificationAgent(BaseAdapter):
-    """Scores a captured lead and decides pipeline entry. execute() runs in-process."""
-    async def execute(self, payload: dict) -> dict:
-        msg = (payload.get("message") or "").lower()
-        budget = self._extract_budget(msg)
-        timeline = self._extract_timeline(msg)
-        intent = "buy" if re.search(r"\b(buy|purchase|own|invest)\b", msg) else "info"
-        score = 0
-        score += 40 if budget else 0
-        score += 30 if timeline != "unknown" else 0
-        score += 30 if intent == "buy" else 10
-        decision = "qualified_pipeline_entry" if score >= 60 else "nurture"
-        return {
-            "lead_id": payload.get("lead_id"),
-            "score": score, "intent": intent, "timeline": timeline,
-            "budget_band": budget, "decision": decision,
-            "confidence": "medium", "status": "qualified" if decision.startswith("qualified") else "nurture",
-            "next": "route_to_geomatch",
-        }
-    def _extract_budget(self, msg: str) -> str | None: ...
-    def _extract_timeline(self, msg: str) -> str: ...
-```
+The canonical OS source checkout is at `F:/01_Projects/repos/sahiixx-os` (`b4883d5`) with active repair worktree `C:/Users/sahii/work-audits/os-repair` (branch `codex/estate-repair-20261106`); `F:/ALL_MY_FILES/Projects/repos/sahiixx-os` (`52e24b6`) is retired, and neither the README-only `Projects/sahiixx-os` folder nor the older `projects/sahiix-os` Node/SQLite estate service is the Cloudflare OS source.
 
-## 4) Build order (the 5 agents, incrementally)
+- `api/lib/estate.ts` reads `/health` and `/leads` through `ESTATE_API_URL`.
+- `api/nexus-router.ts` exposes estate queries and an authenticated `importLeadAsDeal` mutation; in `os-repair`, estate endpoints (`estateConfig`, `estateHealth`, `estateLeads`) require `protectedProcedure` auth, `importLeadAsDeal` uses atomic `onConflictDoNothing` idempotency on `dealId`, rejects read-only recovery snapshots (`health.body.recovery === true`), and fails closed when estate health cannot be verified (`src/pages/Nexus.tsx` labels recovery snapshots and disables import).
+- Import creates an `ESTATE-<id>` deal shell with price 0 and score 50; it does not carry OPA qualification or matching into the CRM.
+- `api/jarvis/tools.ts` dispatches to OPA locally and defines service-control confirmation gates. Local OS control is not established by the edge deployment.
+- `F:/01_Projects/repos/sahiixx-os` carries an uncommitted `api/jarvis/tools.ts` WSL distro edit (`Ubuntu-24.04` -> `Ubuntu`).
 
-1. **QualificationAgent** — schema above. Highest leverage, easiest to test (pure scoring).
-2. **LeadCaptureAgent** — normalize WhatsApp/Telegram/web into the LeadCreated payload. (NEXUS already has the WhatsApp side; this wraps it into OPA events.)
-3. **GeoMatchAgent** — consume LeadQualified → attach 3–10 area/property matches. Backed by `adapters/realestate/` + inventory data.
-4. **SchedulingAgent** — consume LeadMatched → propose slots, Tier-2 gated (requires operator confirm — matches the Supervisor governance rule).
-5. **ReportingAgent** — consume all events → funnel tables. Backed by OPA `/metrics` + dashboard.
+Read-only public checks on 2026-11-05:
 
-## 5) Governance (from your Supervisor spec — already in OPA's DNA)
+| Check | Observed result |
+|---|---|
+| `/api/health` | HTTP 200, status ok, version 4.3.0 |
+| `/api/ready` | HTTP 200, status ready, dbMode neon-http |
+| `/api/trpc/nexus.estateHealth` | Bridge returned ok=false, upstream HTTP 530 |
 
-- Tier-2 (financial/production: live offers, auto-booking) = **never auto-execute**.
-  OPA's `ApprovalManager` + `risk_level: high/critical` gates already do this.
-- Wire SchedulingAgent's confirm step to OPA's existing approval flow, don't reinvent.
+The public shell is ready, but its estate bridge is currently failing. These checks do not identify an exact deployed Git commit or prove customer workflows succeed.
 
-## 6) What I did NOT do (and why)
+## Verification and remaining boundary
 
-- Did **not** create 5 agent files claiming they're "live." They aren't — that would be
-  the exact honesty gap we avoid.
-- Did **not** paste the Supervisor prompt as if OPA runs it. OPA's router is config-driven,
-  not a chat supervisor. The spec's *governance + event model* is sound and maps onto
-  `ApprovalManager` + `MessageBus` — use those, not a new persona.
+- OPA (`sahiixx-agency`): 110/110 Python tests passed across the 41 focused lead-pipeline tests (qualification, capture, geomatch, HTTP pipeline, ASGI API-key gate, `cli/main.py serve`, core engine registration), 4 `test_routing_coverage.py` tests, 41 `test_api.py` tests, and 24 `test_api_coverage.py` tests (plus 9/9 `test_star_promoter.py`), with isolated `tmp_path` workflows/data dirs and zero `data/workflows/*.json` mutations; `ruff check` passed with 0 errors.
+- OS & recovery audit (`C:/Users/sahii/work-audits/os-repair`, `C:/Users/sahii/work-audits/lead-system`): in `os-repair`, `npm run check`, `check:schema`, `build`, `test:security` (10/10), `test:nexus` (6/6), `test:charts` (4/4), and `estate-health.test.sh` (4/4) all pass on `codex/estate-repair-20261106`; in `lead-system`, 15/15 Vitest checks pass (`bridge.test.ts` 12/12 + `recovery-live.test.ts` 3/3 against the local `127.0.0.1:3011` read-only June 29 recovery origin), 6/6 `nexus-import.test.ts` checks pass, and 7/7 Python `test_estate_recovery.py` checks pass.
+- The audit harness at `C:/Users/sahii/work-audits/lead-system` verifies the copied `os-repair` `nexus-router.ts`, `context.ts`, and `lib/estate.ts` contracts (including `protectedProcedure` auth, `onConflictDoNothing` idempotency, and recovery-snapshot fail-closed/rejection guards); it does not prove Neon persistence or live tunnel reachability.
+- Curated area matching is not live listing availability, pricing validation, or investment advice.
+- No customer lead was imported, no message sent, and no booking or deployment performed.
 
-## 7) Your move
-
-Pick one:
-- **(a)** I build `qualification_agent.py` (real, tested against the schema above) + register it + a routing rule. Smallest real increment.
-- **(b)** I scaffold the event schemas on the existing `MessageBus` (lead.created/qualified/matched/scheduled) so the 5 agents have a contract to share.
-- **(c)** I wire NEXUS's WhatsApp intake → OPA `LeadCreated` event (the real Capture boundary).
+Next operational dependency: restore the configured estate tunnel/origin, then run an explicitly scoped synthetic lead import against a staging database. Verify WhatsApp intake and outbound approval separately.

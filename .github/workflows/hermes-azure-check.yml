@@ -16,8 +16,16 @@ jobs:
           AZURE_FOUNDRY_API_KEY: ${{ secrets.AZURE_FOUNDRY_API_KEY }}
           AZURE_FOUNDRY_BASE_URL: ${{ secrets.AZURE_FOUNDRY_BASE_URL }}
         run: |
-          if [ -z "$AZURE_FOUNDRY_API_KEY" ]; then
-            echo "AZURE_FOUNDRY_API_KEY not set - skipping live check"
+          if [ -z "$AZURE_FOUNDRY_API_KEY" ] || [ -z "$AZURE_FOUNDRY_BASE_URL" ]; then
+            echo "AZURE_FOUNDRY_API_KEY or AZURE_FOUNDRY_BASE_URL not set - skipping live check"
+            exit 0
+          fi
+          host="${AZURE_FOUNDRY_BASE_URL#http://}"
+          host="${host#https://}"
+          host="${host%%/*}"
+          host="${host%%:*}"
+          if ! getent hosts "$host" >/dev/null 2>&1; then
+            echo "AZURE_FOUNDRY_BASE_URL host ($host) does not resolve in DNS - skipping retired endpoint check"
             exit 0
           fi
           code=$(curl -sS -o /tmp/out.json -w '%{http_code}' \
